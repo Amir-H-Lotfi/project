@@ -1,13 +1,17 @@
 package us.core.pr.domain.entity;
 
-import jakarta.persistence.*;
 import us.core.pr.domain.entity.constraints.Address;
 import us.core.pr.domain.entity.constraints.PersonName;
-import us.core.pr.domain.entity.logger.impl.StudentEntityListener;
+import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
+@EntityListeners(value = {
+        EveryEntityListener.PreEveryEntityListener.class,
+        EveryEntityListener.PostEveryEntityListener.class
+})
 @Entity
 public class Student
         implements Serializable
@@ -21,7 +25,7 @@ public class Student
     /**
      * relationships
      */
-    private List<Course> courses;
+    private Set<CourseTaken> courseTaken;
 
     public Student() {}
 
@@ -59,12 +63,10 @@ public class Student
         return address;
     }
 
-    @ManyToMany
-    @JoinTable(name = "st_course_taken", joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id"))
-    public List<Course> getCourses()
+    @OneToMany(mappedBy = "course")
+    public Set<CourseTaken> getCourseTaken()
     {
-        return courses;
+        return courseTaken;
     }
 
     public void setStudentId(String studentId)
@@ -92,8 +94,8 @@ public class Student
         this.address = address;
     }
 
-    public void setCourses(List<Course> courses)
+    public void setCourseTaken(Set<CourseTaken> courses)
     {
-        this.courses = courses;
+        this.courseTaken = courses;
     }
 }

@@ -1,26 +1,30 @@
 package us.core.pr.domain.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import us.core.pr.domain.entity.logger.impl.CourseEntityListener;
+import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
+@EntityListeners(value = {
+        EveryEntityListener.PreEveryEntityListener.class,
+        EveryEntityListener.PostEveryEntityListener.class
+})
 @Entity
 public class Course
         implements Serializable
 {
-    private String name;
+
+    private String  name;
     private Integer credit;
 
 
     /**
      * relationship
      */
-    private List<Professor> professors;
-    private List<Student> students;
+    private Set<CourseTaught> courseTaught;
+    private Set<CourseTaken>  courseTaken;
 
     public Course() {}
 
@@ -44,18 +48,16 @@ public class Course
         this.credit = credit;
     }
 
-    @ManyToMany
-    @JoinTable(name = "pr_course_taken", joinColumns = @JoinColumn(name = "course_id")
-            , inverseJoinColumns = @JoinColumn(name = "professor_id"))
-    public List<Professor> getProfessors()
+    @OneToMany(mappedBy = "course")
+    public Set<CourseTaught> getCourseTaught()
     {
-        return professors;
+        return courseTaught;
     }
 
-    @ManyToMany(mappedBy = "courses")
-    public List<Student> getStudents()
+    @OneToMany(mappedBy = "course")
+    public Set<CourseTaken> getCourseTaken()
     {
-        return students;
+        return courseTaken;
     }
 
     public void setName(String name)
@@ -68,14 +70,14 @@ public class Course
         this.credit = credit;
     }
 
-    public void setProfessors(List<Professor> professors)
+    public void setCourseTaught(Set<CourseTaught> courseTaught)
     {
-        this.professors = professors;
+        this.courseTaught = courseTaught;
     }
 
-    public void setStudents(List<Student> students)
+    public void setCourseTaken(Set<CourseTaken> students)
     {
-        this.students = students;
+        this.courseTaken = students;
     }
 
 }

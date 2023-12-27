@@ -5,8 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import us.core.pr.exception.IllegalHeadOfDepartmentAssignmentException;
-import us.core.pr.exception.RecordNotFoundException;
+import us.core.pr.exception.jpa.RecordNotFoundException;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.Serializable;
 
 @ControllerAdvice
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler
 
     @ExceptionHandler(value = RecordNotFoundException.class)
     public ResponseEntity<Object> RecordNotFoundExceptionHandler(Exception exception, WebRequest webRequest)
+    {
+        return null;
+    }
+
+    @ExceptionHandler(value = EntityNotFoundException.class)
+    public ResponseEntity<Object> EntityNotfoundExceptionHandler(Exception exception, WebRequest webRequest)
     {
         return null;
     }

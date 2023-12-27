@@ -1,8 +1,8 @@
 package us.core.pr.domain.entity.constraints;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @NotNull
 @NotBlank
