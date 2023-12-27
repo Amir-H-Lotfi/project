@@ -4,23 +4,26 @@ spring:
     defer-datasource-initialization: false
     generate-ddl: true
     show-sql: true
-#    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
-        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         default_schema: dbo
 
   datasource:
     embedded-database-connection: none
-    driver-class-name: org.mariadb.jdbc.Driver
-    username: root
-    password: perlhash
-    url : jdbc:mariadb://localhost:3306/testdb
-#    url: jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS DBO;
+#    url : jdbc:mariadb://localhost:3306/testdb
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    username: root
+#    password: perlhash
+    url: jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS DBO;
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
   h2:
     console:
       enabled: true

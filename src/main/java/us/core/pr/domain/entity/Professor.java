@@ -1,12 +1,17 @@
 package us.core.pr.domain.entity;
 
-import jakarta.persistence.*;
 import us.core.pr.domain.entity.constraints.PersonName;
-import us.core.pr.domain.entity.logger.impl.ProfessorEntityListener;
+import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
+@EntityListeners(value = {
+        EveryEntityListener.PreEveryEntityListener.class,
+        EveryEntityListener.PostEveryEntityListener.class
+})
 @Entity
 public class Professor
         implements Serializable
@@ -19,8 +24,8 @@ public class Professor
     /**
      * relationship
      */
-    private College department;
-    private List<Course> courses;
+    private College           department;
+    private Set<CourseTaught> courseTaught;
 
 
     public Professor() {}
@@ -52,19 +57,16 @@ public class Professor
     }
 
     @OneToOne
-    @JoinTable(name = "head_of_department",
-            joinColumns = @JoinColumn(name = "professor_id"),
-            inverseJoinColumns = @JoinColumn(name = "college_name")
-    )
+    @JoinTable(name = "head_of_department", joinColumns = @JoinColumn(name = "professor_id"), inverseJoinColumns = @JoinColumn(name = "college_name"))
     public College getDepartment()
     {
         return department;
     }
 
-    @ManyToMany(mappedBy = "professors")
-    public List<Course> getCourses()
+    @OneToMany(mappedBy = "professor")
+    public Set<CourseTaught> getCourseTaught()
     {
-        return courses;
+        return courseTaught;
     }
 
     public void setPersonnelId(String personnelId)
@@ -92,8 +94,8 @@ public class Professor
         this.department = department;
     }
 
-    public void setCourses(List<Course> courses)
+    public void setCourseTaught(Set<CourseTaught> courseTaught)
     {
-        this.courses = courses;
+        this.courseTaught = courseTaught;
     }
 }

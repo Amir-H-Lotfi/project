@@ -1,13 +1,17 @@
 package us.core.pr.domain.entity;
 
-import jakarta.persistence.*;
 import us.core.pr.domain.entity.constraints.CollegeName;
-import us.core.pr.domain.entity.logger.abstraction.AbstractEntityListener;
-import us.core.pr.domain.entity.logger.impl.CollegeEntityListener;
+import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
+@EntityListeners(value = {
+        EveryEntityListener.PreEveryEntityListener.class,
+        EveryEntityListener.PostEveryEntityListener.class
+})
 @Entity
 public class College
         implements Serializable
@@ -18,11 +22,10 @@ public class College
      * relationships
      */
 
-    private Professor headOfDepartment;
-
-    private List<Course> courses;
-    private List<Student> students;
-    private List<Professor> professors;
+    private Professor       headOfDepartment;
+    private Set<Course>    courses;
+    private Set<Student>    students;
+    private Set<Professor> professors;
 
     public College() {}
 
@@ -42,21 +45,21 @@ public class College
 
     @OneToMany
     @JoinColumn(name = "college_name")
-    public List<Course> getCourses()
+    public Set<Course> getCourses()
     {
         return courses;
     }
 
     @OneToMany
     @JoinColumn(name = "college_name")
-    public List<Student> getStudents()
+    public Set<Student> getStudents()
     {
         return students;
     }
 
     @OneToMany
     @JoinColumn(name = "college_name")
-    public List<Professor> getProfessors()
+    public Set<Professor> getProfessors()
     {
         return professors;
     }
@@ -71,20 +74,19 @@ public class College
         this.headOfDepartment = headOfDepartment;
     }
 
-    public void setCourses(List<Course> courses)
+    public void setCourses(Set<Course> courses)
     {
         this.courses = courses;
     }
 
-    public void setStudents(List<Student> students)
+    public void setStudents(Set<Student> students)
     {
         this.students = students;
     }
 
-    public void setProfessors(List<Professor> professors)
+    public void setProfessors(Set<Professor> professors)
     {
         this.professors = professors;
     }
-
 }
 
