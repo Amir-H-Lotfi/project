@@ -4,6 +4,7 @@ import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -27,6 +28,12 @@ public class Course
     private Set<CourseTaken>  courseTaken;
 
     public Course() {}
+
+    public Course(String name, Integer credit)
+    {
+        this.name = name;
+        this.credit = credit;
+    }
 
     @Id
     @Column(length = 64)
@@ -78,6 +85,24 @@ public class Course
     public void setCourseTaken(Set<CourseTaken> students)
     {
         this.courseTaken = students;
+    }
+
+    public void addCourseTaken(CourseTaken courseTaken)
+    {
+        if (this.courseTaken == null)
+        {
+            this.courseTaken = new HashSet<>();
+        }
+        this.courseTaken.add(courseTaken);
+    }
+
+    public void addCourseTaught(CourseTaught courseTaught)
+    {
+        if (this.courseTaught == null)
+        {
+            this.courseTaught = new HashSet<>();
+        }
+        this.courseTaught.add(courseTaught);
     }
 
 }

@@ -3,35 +3,37 @@ package us.core.pr.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import us.core.pr.domain.crud.interfaces.ICrudOperations;
-import us.core.pr.domain.dto.CourseDTO;
-import us.core.pr.domain.dto.ProfessorDTO;
-import us.core.pr.domain.dto.ReportingDTO;
 import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.CourseDTOMapper;
+import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
 import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
+import us.core.pr.domain.dto.reporting.RpCourseTaught;
+import us.core.pr.domain.dto.reporting.RpProfessorAVG;
 import us.core.pr.domain.entity.Course;
 import us.core.pr.domain.entity.CourseTaken;
 import us.core.pr.domain.entity.CourseTaught;
 import us.core.pr.domain.entity.Professor;
-import us.core.pr.exception.jpa.RecordNotFoundException;
+import us.core.pr.exception.RecordNotFoundException;
+import us.core.pr.exception.entity.ProfessorRecordNotFoundException;
 import us.core.pr.repository.IProfessorRepository;
 import us.core.pr.service.abstracts.AbstractProfessorService;
-import us.core.pr.service.interfaces.ICrudService;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
+import java.util.HashSet;
+import java.util.Set;
+
+import us.core.pr.domain.dto.professor.*;
 
 @Service
 public class ProfessorService
         extends AbstractProfessorService
-        implements ICrudService<ProfessorDTO.Create, ProfessorDTO.Read, ProfessorDTO.Update, ProfessorDTO.Delete, String>
 {
 
     private final IDataTransferObjectMapperFactory factory;
 
     @Autowired
-    public ProfessorService(IDataTransferObjectMapperFactory factory, IProfessorRepository ipRepository,
-            ICrudOperations<ProfessorDTO.Create, ProfessorDTO.Read, ProfessorDTO.Update, ProfessorDTO.Delete, String> iCrudOperations)
+    public ProfessorService(IDataTransferObjectMapperFactory factory, IProfessorRepository ipRepository, ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
     {
         super(ipRepository, iCrudOperations);
         this.factory = factory;
@@ -39,37 +41,39 @@ public class ProfessorService
 
 
     @Override
-    public void createEntity(ProfessorDTO.Create entity)
+    public void createEntity(Create entity)
     {
         super.iCrudOperations.create(entity);
     }
 
     @Override
-    public ProfessorDTO.Read readEntity(String key)
+    public Read readEntity(String key)
     {
         return super.iCrudOperations.read(key);
     }
 
     @Override
-    public void updateEntity(ProfessorDTO.Update entity)
+    public void updateEntity(Update entity)
     {
         super.iCrudOperations.update(entity);
     }
 
     @Override
-    public void deleteEntity(ProfessorDTO.Delete entity)
+    public void deleteEntity(Delete entity)
     {
         super.iCrudOperations.delete(entity);
     }
 
     @Override
-    public void addCourse(ProfessorDTO.Update pUpdate, CourseDTO.Create cCreate)
+    public void addCourse(Update pUpdate, us.core.pr.domain.dto.course.Create cCreate)
     {
         try
         {
-            IDataTransferObjectMapper<CourseDTO.Create, Course> mapper = factory.create(CourseDTOMapper.CreateToCourse.class);
+            Professor professor = super.ipRepository.findById(pUpdate.getPersonnelId())
+                                                    .orElseThrow(RecordNotFoundException::new);
+            IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
+                    factory.create(CreateToCourse.class);
             Course course = mapper.from(cCreate);
-            Professor professor = super.ipRepository.findById(pUpdate.getPersonnelId()).orElseThrow(RecordNotFoundException::new);
             // need to modify
             CourseTaught courseTaught = new CourseTaught();
             courseTaught.setCourse(course);
@@ -84,36 +88,44 @@ public class ProfessorService
     }
 
     @Override
-    public ReportingDTO.RpProfessorAVG getAverage(ProfessorDTO.Read read)
+    public RpProfessorAVG getAverage(Read read)
     {
-        Professor professor = super.ipRepository.findById(read.getPersonnelId()).orElseThrow(RecordNotFoundException::new);
-        ReportingDTO.RpProfessorAVG reportingProfessor = new ReportingDTO.RpProfessorAVG();
-        reportingProfessor.setName(professor.getName());
-        reportingProfessor.setPersonnelId(professor.getPersonnelId());
-        BigDecimal sum, avg, credits;
+        Professor professor = ipRepository.findById(read.getPersonnelId())
+                                          .orElseThrow(ProfessorRecordNotFoundException::new);
+
+        RpProfessorAVG rp = new RpProfessorAVG();
+        Set<RpCourseTaught> set = new HashSet<>();
 
         for (CourseTaught courseTaught : professor.getCourseTaught())
         {
             Course currentCourse = courseTaught.getCourse();
-            credits = BigDecimal.ZERO;
-            avg = BigDecimal.ZERO;
-            sum = BigDecimal.ZERO;
 
+            BigDecimal currentCourseCredit = BigDecimal.valueOf(currentCourse.getCredit());
+            BigDecimal sum = BigDecimal.ZERO;
+            BigDecimal credits = BigDecimal.ZERO;
+            BigDecimal avg;
+
+            // calculating average by course title
             for (CourseTaken courseTaken : currentCourse.getCourseTaken())
             {
-                BigDecimal grade = BigDecimal.valueOf(courseTaken.getGrade());
-                BigDecimal credit = BigDecimal.valueOf(currentCourse.getCredit());
-                sum = sum.add(grade.multiply(credit));
-                credits = credits.add(credit);
+                BigDecimal currentCourseGrade = BigDecimal.valueOf(courseTaken.getGrade());
+                sum = sum.add(currentCourseGrade.multiply(currentCourseCredit));
+                credits = credits.add(currentCourseCredit);
             }
-            avg = sum.divide(credits, RoundingMode.UNNECESSARY);
 
-            ReportingDTO.RpCourseTaught reportingAverage = new ReportingDTO.RpCourseTaught();
-            reportingAverage.setAverage(avg);
-            reportingAverage.setCourseName(currentCourse.getName());
-            reportingProfessor.addAverageReports(reportingAverage);
+            avg = sum.divide(credits, RoundingMode.DOWN);
+
+            RpCourseTaught rpCourseTaught = new RpCourseTaught();
+            rpCourseTaught.setName(currentCourse.getName());
+            rpCourseTaught.setAverage(avg);
+
+            set.add(rpCourseTaught);
         }
 
-        return reportingProfessor;
+        rp.setPersonnelId(professor.getPersonnelId());
+        rp.setName(professor.getName());
+        rp.setAvgReports(set);
+        return rp;
     }
+
 }

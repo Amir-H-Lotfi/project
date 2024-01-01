@@ -46,6 +46,13 @@ public class CourseTaken
 
     public CourseTaken() {}
 
+    public CourseTaken(Integer grade, Student student, Course course)
+    {
+        this.grade = grade;
+        this.student = student;
+        this.course = course;
+    }
+
     @EmbeddedId
     public CompositeKey getCompositeKey()
     {

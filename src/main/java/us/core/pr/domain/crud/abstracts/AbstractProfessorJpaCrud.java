@@ -1,12 +1,11 @@
 package us.core.pr.domain.crud.abstracts;
 
 import us.core.pr.domain.crud.interfaces.ICrudOperations;
-import us.core.pr.domain.dto.ProfessorDTO;
 import us.core.pr.repository.IProfessorRepository;
-import us.core.pr.service.interfaces.IProfessorService;
+import us.core.pr.domain.dto.professor.*;
 
 public abstract class AbstractProfessorJpaCrud
-        implements ICrudOperations<ProfessorDTO.Create, ProfessorDTO.Read, ProfessorDTO.Update, ProfessorDTO.Delete, String>
+        implements ICrudOperations<Create, Read, Update, Delete, String>
 {
     protected final IProfessorRepository ipRepository;
 

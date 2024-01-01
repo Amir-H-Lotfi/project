@@ -5,7 +5,9 @@ import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @EntityListeners(value = {
@@ -22,9 +24,9 @@ public class College
      * relationships
      */
 
-    private Professor       headOfDepartment;
+    private Professor      headOfDepartment;
     private Set<Course>    courses;
-    private Set<Student>    students;
+    private Set<Student>   students;
     private Set<Professor> professors;
 
     public College() {}
@@ -72,6 +74,7 @@ public class College
     public void setHeadOfDepartment(Professor headOfDepartment)
     {
         this.headOfDepartment = headOfDepartment;
+        headOfDepartment.setDepartment(this);
     }
 
     public void setCourses(Set<Course> courses)
@@ -87,6 +90,48 @@ public class College
     public void setProfessors(Set<Professor> professors)
     {
         this.professors = professors;
+    }
+
+    public void addCourse(Course course)
+    {
+        if (this.courses == null)
+        {
+            this.courses = new HashSet<>();
+        }
+        this.courses.add(course);
+    }
+
+    public void addStudent(Student student)
+    {
+        if (this.students == null)
+        {
+            this.students = new HashSet<>();
+        }
+        this.students.add(student);
+    }
+
+    public void addProfessor(Professor professor)
+    {
+        if (this.professors == null)
+        {
+            this.professors = new HashSet<>();
+        }
+        this.professors.add(professor);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        College college = (College) o;
+        return college.name.equals(this.name);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.name.hashCode();
     }
 }
 

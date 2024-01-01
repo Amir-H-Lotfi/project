@@ -1,9 +1,9 @@
 package us.core.pr.domain.dto.mapper.factory.interfaces;
 
+import org.springframework.stereotype.Component;
 import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
 
 import java.io.Serializable;
-
 public interface IDataTransferObjectMapperFactory
         extends Serializable
 {

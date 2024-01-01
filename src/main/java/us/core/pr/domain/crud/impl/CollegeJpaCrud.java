@@ -2,13 +2,16 @@ package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
 import us.core.pr.domain.crud.abstracts.AbstractCollegeJpaCrud;
-import us.core.pr.domain.dto.CollegeDTO;
 import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.CollegeDTOMapper;
+import us.core.pr.domain.dto.mapper.impl.college.CollegeToRead;
+import us.core.pr.domain.dto.mapper.impl.college.CreateToCollege;
+import us.core.pr.domain.dto.mapper.impl.college.DeleteToCollege;
+import us.core.pr.domain.dto.mapper.impl.college.UpdateToCollege;
 import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
 import us.core.pr.domain.entity.College;
-import us.core.pr.exception.jpa.RecordNotFoundException;
+import us.core.pr.exception.RecordNotFoundException;
 import us.core.pr.repository.ICollegeRepository;
+import us.core.pr.domain.dto.college.*;
 
 public class CollegeJpaCrud
         extends AbstractCollegeJpaCrud
@@ -23,12 +26,12 @@ public class CollegeJpaCrud
     }
 
     @Override
-    public void create(CollegeDTO.Create create)
+    public void create(Create create)
     {
 
         try
         {
-            IDataTransferObjectMapper<CollegeDTO.Create, College> mapper = factory.create(CollegeDTOMapper.CreateToCollege.class);
+            IDataTransferObjectMapper<Create, College> mapper = factory.create(CreateToCollege.class);
             College college = mapper.from(create);
             super.iCollegeRepository.saveAndFlush(college);
 
@@ -40,13 +43,13 @@ public class CollegeJpaCrud
     }
 
     @Override
-    public CollegeDTO.Read read(String key)
+    public Read read(String key)
     {
         try
         {
-            IDataTransferObjectMapper<College, CollegeDTO.Read> mapper = factory.create(CollegeDTOMapper.CollegeToRead.class);
+            IDataTransferObjectMapper<College, Read> mapper = factory.create(CollegeToRead.class);
             College college = super.iCollegeRepository.findById(key).orElseThrow(RecordNotFoundException::new);
-            CollegeDTO.Read read = mapper.from(college);
+            Read read = mapper.from(college);
             return read;
         }
         catch (IllegalAccessException | InstantiationException e)
@@ -56,11 +59,11 @@ public class CollegeJpaCrud
     }
 
     @Override
-    public void update(CollegeDTO.Update read)
+    public void update(Update read)
     {
         try
         {
-            IDataTransferObjectMapper<CollegeDTO.Update, College> mapper = factory.create(CollegeDTOMapper.UpdateToCollege.class);
+            IDataTransferObjectMapper<Update, College> mapper = factory.create(UpdateToCollege.class);
             College college = mapper.from(read);
             super.iCollegeRepository.saveAndFlush(college);
         }
@@ -71,11 +74,11 @@ public class CollegeJpaCrud
     }
 
     @Override
-    public void delete(CollegeDTO.Delete delete)
+    public void delete(Delete delete)
     {
         try
         {
-            IDataTransferObjectMapper<CollegeDTO.Delete, College> mapper = factory.create(CollegeDTOMapper.DeleteToCollege.class);
+            IDataTransferObjectMapper<Delete, College> mapper = factory.create(DeleteToCollege.class);
             College college = mapper.from(delete);
             if (super.iCollegeRepository.exists(Example.of(college)))
             {

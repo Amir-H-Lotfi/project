@@ -1,19 +1,18 @@
 package us.core.pr.service.interfaces;
 
-import us.core.pr.domain.dto.CollegeDTO;
-import us.core.pr.domain.dto.ProfessorDTO;
-import us.core.pr.domain.dto.ReportingDTO;
+import us.core.pr.domain.dto.college.Update;
+import us.core.pr.domain.dto.professor.Read;
+import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public interface ICollegeService
         extends Serializable
 {
-    void addHeadOfDepartment(ProfessorDTO.Update pUpdate, CollegeDTO.Update cUpdate);
+    void addHeadOfDepartment(Read pRead, Update cUpdate);
 
-    void addProfessor(ProfessorDTO.Read pRead, CollegeDTO.Update cUpdate);
+    void addProfessor(Read pRead, Update cUpdate);
 
-    ReportingDTO.RpCollegeAVG getStudentsAverage(CollegeDTO.Read read);
+    RpCollegeAVG getStudentsAverage(us.core.pr.domain.dto.college.Read read);
 
 }

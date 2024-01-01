@@ -1,0 +1,10 @@
+server:
+  port: 8080
+path:
+  root: api/v1
+  student:
+    value: student
+  college:
+    value: college
+  professor:
+    value: professor

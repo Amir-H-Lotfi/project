@@ -37,9 +37,18 @@ public class CourseTaught
     }
 
     private CompositeKey compositeKey;
+    private Professor    professor;
+    private Course       course;
 
-    private Professor professor;
-    private Course    course;
+    public CourseTaught()
+    {
+    }
+
+    public CourseTaught(Professor professor, Course course)
+    {
+        this.professor = professor;
+        this.course = course;
+    }
 
     @EmbeddedId
     public CompositeKey getCompositeKey()

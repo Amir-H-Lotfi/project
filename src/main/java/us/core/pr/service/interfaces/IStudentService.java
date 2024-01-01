@@ -1,16 +1,14 @@
 package us.core.pr.service.interfaces;
 
-import us.core.pr.domain.dto.CourseDTO;
-import us.core.pr.domain.dto.ReportingDTO;
-import us.core.pr.domain.dto.StudentDTO;
-import us.core.pr.service.interfaces.ICrudService;
-
 import java.io.Serializable;
 
+import us.core.pr.domain.dto.course.Create;
+import us.core.pr.domain.dto.reporting.RpStudentAVG;
+import us.core.pr.domain.dto.student.*;
 public interface IStudentService
         extends Serializable
 {
-    void addCourse(StudentDTO.Update update, CourseDTO.Create create);
+    void addCourse(Update update, Create create);
 
-    ReportingDTO.RpStudentAVG getAverage(StudentDTO.Read read);
+    RpStudentAVG getAverage(Read read);
 }

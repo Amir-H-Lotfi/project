@@ -6,6 +6,8 @@ import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @EntityListeners(value = {
@@ -97,5 +99,29 @@ public class Student
     public void setCourseTaken(Set<CourseTaken> courses)
     {
         this.courseTaken = courses;
+    }
+
+    public void addCourseTaken(CourseTaken courseTaken)
+    {
+        if (this.courseTaken == null)
+        {
+            this.courseTaken = new HashSet<>();
+        }
+        this.courseTaken.add(courseTaken);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return student.getStudentId().equals(studentId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(studentId);
     }
 }

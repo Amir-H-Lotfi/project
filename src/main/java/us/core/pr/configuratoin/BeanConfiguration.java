@@ -20,6 +20,8 @@ import java.io.Serializable;
 public class BeanConfiguration
         implements Serializable
 {
+    public BeanConfiguration() {}
+
     @Bean
     public IDataTransferObjectMapperFactory factory()
     {
@@ -28,22 +30,23 @@ public class BeanConfiguration
 
     @Bean
     public AbstractStudentJpaCrud abstractStudentJpaCrud(IStudentRepository repository,
-            IDataTransferObjectMapperFactory factory)
+                                                         IDataTransferObjectMapperFactory factory)
     {
         return new StudentJpaCrud(repository, factory);
     }
 
     @Bean
     public AbstractCollegeJpaCrud abstractCollegeJpaCrud(ICollegeRepository repository,
-            IDataTransferObjectMapperFactory factory)
+                                                         IDataTransferObjectMapperFactory factory)
     {
         return new CollegeJpaCrud(repository, factory);
     }
 
     @Bean
     public AbstractProfessorJpaCrud abstractProfessorJpaCrud(IProfessorRepository repository,
-            IDataTransferObjectMapperFactory factory)
+                                                             IDataTransferObjectMapperFactory factory)
     {
         return new ProfessorJpaCrud(repository, factory);
     }
+
 }

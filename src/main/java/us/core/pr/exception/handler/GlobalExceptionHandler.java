@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import us.core.pr.exception.IllegalHeadOfDepartmentAssignmentException;
-import us.core.pr.exception.jpa.RecordNotFoundException;
+import us.core.pr.exception.RecordNotFoundException;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.Serializable;

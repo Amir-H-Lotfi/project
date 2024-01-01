@@ -1,12 +1,11 @@
 package us.core.pr.domain.crud.abstracts;
 
-import us.core.pr.domain.dto.CollegeDTO;
-import us.core.pr.domain.entity.College;
-import us.core.pr.repository.ICollegeRepository;
 import us.core.pr.domain.crud.interfaces.ICrudOperations;
+import us.core.pr.repository.ICollegeRepository;
+import us.core.pr.domain.dto.college.*;
 
 public abstract class AbstractCollegeJpaCrud
-        implements ICrudOperations<CollegeDTO.Create , CollegeDTO.Read , CollegeDTO.Update, CollegeDTO.Delete,String>
+        implements ICrudOperations<Create, Read, Update, Delete, String>
 {
     protected final ICollegeRepository iCollegeRepository;
 

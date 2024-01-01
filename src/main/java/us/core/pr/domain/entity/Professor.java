@@ -5,7 +5,9 @@ import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @EntityListeners(value = {
@@ -97,5 +99,30 @@ public class Professor
     public void setCourseTaught(Set<CourseTaught> courseTaught)
     {
         this.courseTaught = courseTaught;
+    }
+
+    public void addCourseTaught(CourseTaught courseTaught)
+    {
+        if (this.courseTaught == null)
+        {
+            this.courseTaught = new HashSet<>();
+        }
+        this.courseTaught.add(courseTaught);
+    }
+
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Professor professor = (Professor) o;
+        return professor.getPersonnelId().equals(this.personnelId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return this.personnelId.hashCode();
     }
 }
