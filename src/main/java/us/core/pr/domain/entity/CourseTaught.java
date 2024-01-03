@@ -10,27 +10,27 @@ public class CourseTaught
     public static class CompositeKey
             implements Serializable
     {
-        private String courseId;
-        private String professorId;
+        private Integer courseId;
+        private Integer professorId;
 
-        @Column(name = "course_name")
-        public String getCourseId()
+        @Column(name = "course_id")
+        public Integer getCourseId()
         {
             return courseId;
         }
 
-        public void setCourseId(String course)
+        public void setCourseId(Integer course)
         {
             this.courseId = course;
         }
 
         @Column(name = "professor_id")
-        public String getProfessorId()
+        public Integer getProfessorId()
         {
             return professorId;
         }
 
-        public void setProfessorId(String professor)
+        public void setProfessorId(Integer professor)
         {
             this.professorId = professor;
         }
@@ -61,7 +61,7 @@ public class CourseTaught
         this.compositeKey = compositeKey;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("professorId")
     @JoinColumn(name = "professor_id")
     public Professor getProfessor()
@@ -74,7 +74,7 @@ public class CourseTaught
         this.professor = professor;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("courseId")
     @JoinColumn(name = "course_id")
     public Course getCourse()

@@ -11,17 +11,22 @@ import java.util.Objects;
 import java.util.Set;
 
 @EntityListeners(value = {
-        EveryEntityListener.PreEveryEntityListener.class,
-        EveryEntityListener.PostEveryEntityListener.class
+        EveryEntityListener.PreEveryEntityListener.class, EveryEntityListener.PostEveryEntityListener.class
+})
+@Table(indexes = {
+        @Index(columnList = "personnelId", unique = true),
+        @Index(columnList = "name, surname", unique = false),
+        @Index(columnList = "nationalId", unique = true)
 })
 @Entity
 public class Professor
         implements Serializable
 {
-    private String personnelId;
-    private String name;
-    private String surname;
-    private String nationalId;
+    private Integer id;
+    private String  personnelId;
+    private String  name;
+    private String  surname;
+    private String  nationalId;
 
     /**
      * relationship
@@ -33,6 +38,13 @@ public class Professor
     public Professor() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_pro_gen")
+    @SequenceGenerator(name = "ent_pro_gen", initialValue = 1, allocationSize = 1)
+    public Integer getId()
+    {
+        return this.id;
+    }
+
     public String getPersonnelId()
     {
         return personnelId;
@@ -58,17 +70,22 @@ public class Professor
         return nationalId;
     }
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "head_of_department", joinColumns = @JoinColumn(name = "professor_id"), inverseJoinColumns = @JoinColumn(name = "college_name"))
     public College getDepartment()
     {
         return department;
     }
 
-    @OneToMany(mappedBy = "professor")
+    @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
     public Set<CourseTaught> getCourseTaught()
     {
         return courseTaught;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
     public void setPersonnelId(String personnelId)

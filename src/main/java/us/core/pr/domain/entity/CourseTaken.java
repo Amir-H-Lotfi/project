@@ -12,28 +12,28 @@ public class CourseTaken
     public static class CompositeKey
             implements Serializable
     {
-        private String courseId;
-        private String studentId;
+        private Integer courseId;
+        private Integer studentId;
 
 
-        @Column(name = "course_name")
-        public String getCourseId()
+        @Column(name = "course_id")
+        public Integer getCourseId()
         {
             return courseId;
         }
 
-        public void setCourseId(String courseName)
+        public void setCourseId(Integer courseName)
         {
             this.courseId = courseName;
         }
 
         @Column(name = "student_id")
-        public String getStudentId()
+        public Integer getStudentId()
         {
             return studentId;
         }
 
-        public void setStudentId(String studentId)
+        public void setStudentId(Integer studentId)
         {
             this.studentId = studentId;
         }
@@ -64,6 +64,7 @@ public class CourseTaken
         this.compositeKey = compositeKey;
     }
 
+    @Column
     public Integer getGrade()
     {
         return grade;
@@ -74,7 +75,7 @@ public class CourseTaken
         this.grade = grade;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("studentId")
     @JoinColumn(name = "student_id")
     public Student getStudent()
@@ -87,9 +88,9 @@ public class CourseTaken
         this.student = student;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("courseId")
-    @JoinColumn(name = "course_name")
+    @JoinColumn(name = "course_id")
     public Course getCourse()
     {
         return course;

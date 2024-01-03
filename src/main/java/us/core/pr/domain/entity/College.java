@@ -14,11 +14,13 @@ import java.util.Set;
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
+@Table(indexes = {@Index(columnList = "name",unique = true)})
 @Entity
 public class College
         implements Serializable
 {
-    private String name;
+    private Integer id;
+    private String  name;
 
     /**
      * relationships
@@ -32,6 +34,13 @@ public class College
     public College() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_col_gen")
+    @SequenceGenerator(name = "ent_col_gen", initialValue = 1, allocationSize = 1)
+    public Integer getId()
+    {
+        return id;
+    }
+
     @Column(length = 48)
     @CollegeName
     public String getName()
@@ -45,25 +54,30 @@ public class College
         return headOfDepartment;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "college_name")
     public Set<Course> getCourses()
     {
         return courses;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "college_name")
     public Set<Student> getStudents()
     {
         return students;
     }
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "college_name")
     public Set<Professor> getProfessors()
     {
         return professors;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
     public void setName(String name)
@@ -91,6 +105,7 @@ public class College
     {
         this.professors = professors;
     }
+
 
     public void addCourse(Course course)
     {

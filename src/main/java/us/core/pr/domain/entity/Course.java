@@ -12,11 +12,13 @@ import java.util.Set;
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
+@Table(indexes = {@Index(columnList = "name", unique = true)})
 @Entity
 public class Course
         implements Serializable
 {
 
+    private Integer id;
     private String  name;
     private Integer credit;
 
@@ -36,6 +38,13 @@ public class Course
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_cour_gen")
+    @SequenceGenerator(name = "ent_cour_gen", initialValue = 1, allocationSize = 1)
+    public Integer getId()
+    {
+        return id;
+    }
+
     @Column(length = 64)
     public String getName()
     {
@@ -55,16 +64,21 @@ public class Course
         this.credit = credit;
     }
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     public Set<CourseTaught> getCourseTaught()
     {
         return courseTaught;
     }
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     public Set<CourseTaken> getCourseTaken()
     {
         return courseTaken;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
     public void setName(String name)

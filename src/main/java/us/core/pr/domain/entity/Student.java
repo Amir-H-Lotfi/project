@@ -1,5 +1,6 @@
 package us.core.pr.domain.entity;
 
+import scala.collection.Seq;
 import us.core.pr.domain.entity.constraints.Address;
 import us.core.pr.domain.entity.constraints.PersonName;
 import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
@@ -14,15 +15,21 @@ import java.util.Set;
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
+@Table(indexes = {
+        @Index(columnList = "studentId", unique = true),
+        @Index(columnList = "name, surname", unique = false),
+        @Index(columnList = "nationalId", unique = true)
+})
 @Entity
 public class Student
         implements Serializable
 {
-    private String studentId;
-    private String name;
-    private String surname;
-    private String nationalId;
-    private String address;
+    private Integer id;
+    private String  studentId;
+    private String  name;
+    private String  surname;
+    private String  nationalId;
+    private String  address;
 
     /**
      * relationships
@@ -32,6 +39,14 @@ public class Student
     public Student() {}
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_stu_gen")
+    @SequenceGenerator(name = "ent_stu_gen", initialValue = 1, allocationSize = 1)
+    public Integer getId()
+    {
+        return this.id;
+    }
+
+    @Column
     public String getStudentId()
     {
         return studentId;
@@ -65,10 +80,15 @@ public class Student
         return address;
     }
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
     public Set<CourseTaken> getCourseTaken()
     {
         return courseTaken;
+    }
+
+    public void setId(Integer id)
+    {
+        this.id = id;
     }
 
     public void setStudentId(String studentId)
