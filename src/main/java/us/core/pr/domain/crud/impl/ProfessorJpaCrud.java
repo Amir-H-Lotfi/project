@@ -46,7 +46,7 @@ public class ProfessorJpaCrud
         try
         {
             IDataTransferObjectMapper<Professor, Read> mapper = factory.create(ProfessorToRead.class);
-            Professor professor = super.ipRepository.findById(key).orElseThrow(RecordNotFoundException::new);
+            Professor professor = super.ipRepository.findByPersonnelId(key).orElseThrow(RecordNotFoundException::new);
             return mapper.from(professor);
         }
         catch (IllegalAccessException | InstantiationException e)

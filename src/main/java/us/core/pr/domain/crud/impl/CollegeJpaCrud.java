@@ -48,7 +48,7 @@ public class CollegeJpaCrud
         try
         {
             IDataTransferObjectMapper<College, Read> mapper = factory.create(CollegeToRead.class);
-            College college = super.iCollegeRepository.findById(key).orElseThrow(RecordNotFoundException::new);
+            College college = super.iCollegeRepository.findByName(key).orElseThrow(RecordNotFoundException::new);
             Read read = mapper.from(college);
             return read;
         }

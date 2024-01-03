@@ -49,7 +49,7 @@ public class StudentJpaCrud
         try
         {
             IDataTransferObjectMapper<Student, Read> mapper = factory.create(StudentToRead.class);
-            Student student = isRepository.findById(key).orElseThrow(EntityNotFoundException::new);
+            Student student = isRepository.findByStudentId(key).orElseThrow(EntityNotFoundException::new);
             Read read = mapper.from(student);
             return read;
         }
