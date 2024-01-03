@@ -2,6 +2,7 @@ package us.core.pr.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.core.pr.domain.crud.interfaces.ICrudOperations;
 import us.core.pr.domain.dto.college.Create;
 import us.core.pr.domain.dto.college.Read;
@@ -31,6 +32,7 @@ import java.util.function.BinaryOperator;
 
 
 @Service
+@Transactional
 public class CollegeService
         extends AbstractCollegeService
 {
@@ -74,7 +76,7 @@ public class CollegeService
     public void addHeadOfDepartment(us.core.pr.domain.dto.professor.Read pRead,
                                     Update cUpdate)
     {
-        College college = icRepository.findById(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+        College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
         IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Read, Professor> mapper;
         Professor professor;
         try
@@ -110,7 +112,7 @@ public class CollegeService
             throw new RuntimeException(e);
         }
         professor = mapper.from(pRead);
-        College college = icRepository.findById(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+        College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
         college.getProfessors().add(professor);
         icRepository.saveAndFlush(college);
     }
@@ -118,7 +120,7 @@ public class CollegeService
     @Override
     public RpCollegeAVG getStudentsAverage(Read read)
     {
-        College college = icRepository.findById(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+        College college = icRepository.findByName(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
         Set<Student> students = college.getStudents();
 
         BigDecimal totalAverages = BigDecimal.ZERO, totalStudents = BigDecimal.valueOf(students.size());

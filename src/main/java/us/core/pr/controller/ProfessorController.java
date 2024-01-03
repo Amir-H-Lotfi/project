@@ -21,8 +21,7 @@ public class ProfessorController
 
     // add course to professor
     @PatchMapping(path = "/ac")
-    public ResponseEntity<Object> addCourse(@ModelAttribute Update professor,
-                                            @RequestBody Create course)
+    public ResponseEntity<Object> addCourse(@ModelAttribute Update professor, @RequestBody Create course)
     {
         super.iProfessorService.addCourse(professor, course);
         return ResponseEntity.ok().build();
@@ -30,8 +29,7 @@ public class ProfessorController
 
     // get average
     @GetMapping(path = "/ga")
-    public ResponseEntity<RpProfessorAVG> getAverage(
-            @ModelAttribute Read read)
+    public ResponseEntity<RpProfessorAVG> getAverage(@ModelAttribute Read read)
     {
         RpProfessorAVG rp = iProfessorService.getAverage(read);
         return ResponseEntity.ok(rp);

@@ -2,6 +2,7 @@ package us.core.pr.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.core.pr.domain.crud.interfaces.ICrudOperations;
 import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
@@ -26,6 +27,7 @@ import java.util.Set;
 import us.core.pr.domain.dto.professor.*;
 
 @Service
+@Transactional
 public class ProfessorService
         extends AbstractProfessorService
 {
@@ -69,7 +71,7 @@ public class ProfessorService
     {
         try
         {
-            Professor professor = super.ipRepository.findById(pUpdate.getPersonnelId())
+            Professor professor = super.ipRepository.findByPersonnelId(pUpdate.getPersonnelId())
                                                     .orElseThrow(RecordNotFoundException::new);
             IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
                     factory.create(CreateToCourse.class);
@@ -90,7 +92,7 @@ public class ProfessorService
     @Override
     public RpProfessorAVG getAverage(Read read)
     {
-        Professor professor = ipRepository.findById(read.getPersonnelId())
+        Professor professor = ipRepository.findByPersonnelId(read.getPersonnelId())
                                           .orElseThrow(ProfessorRecordNotFoundException::new);
 
         RpProfessorAVG rp = new RpProfessorAVG();

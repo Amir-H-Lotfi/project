@@ -21,8 +21,8 @@ public class CollegeController
 
     // add head of department
     @PatchMapping(path = "/hod")
-    public ResponseEntity<Object> setHeadOfDepartment(@ModelAttribute us.core.pr.domain.dto.professor.Read professor,
-                                                      @RequestBody Update college)
+    public ResponseEntity<Object> setHeadOfDepartment(
+            @ModelAttribute us.core.pr.domain.dto.professor.Read professor, @RequestBody Update college)
     {
         super.iCollegeService.addHeadOfDepartment(professor, college);
         return ResponseEntity.ok().build();
@@ -30,8 +30,8 @@ public class CollegeController
 
     // add professor
     @PatchMapping(path = "/ap")
-    public ResponseEntity<Object> addProfessor(@ModelAttribute us.core.pr.domain.dto.professor.Read professor,
-                                               @RequestBody Update college)
+    public ResponseEntity<Object> addProfessor(
+            @ModelAttribute us.core.pr.domain.dto.professor.Read professor, @RequestBody Update college)
     {
         super.iCollegeService.addProfessor(professor, college);
         return ResponseEntity.ok().build();

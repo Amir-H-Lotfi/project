@@ -1,6 +1,7 @@
 package us.core.pr.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
 import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
@@ -22,6 +23,7 @@ import us.core.pr.domain.dto.student.*;
 import us.core.pr.utils.Calculator;
 
 @Service
+@Transactional
 public class StudentService
         extends AbstractStudentService
 {
@@ -68,7 +70,7 @@ public class StudentService
     {
         try
         {
-            Student student = super.isRepository.findById(sUpdate.getStudentId())
+            Student student = super.isRepository.findByStudentId(sUpdate.getStudentId())
                                                 .orElseThrow(RecordNotFoundException::new);
 
             IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
@@ -81,8 +83,8 @@ public class StudentService
             CourseTaken courseTaken = new CourseTaken();
 
             CourseTaken.CompositeKey compositeKey = new CourseTaken.CompositeKey();
-            compositeKey.setCourseId(course.getName());
-            compositeKey.setStudentId(student.getStudentId());
+            compositeKey.setCourseId(course.getId());
+            compositeKey.setStudentId(student.getId());
 
             courseTaken.setCompositeKey(compositeKey);
 
@@ -105,7 +107,7 @@ public class StudentService
     public RpStudentAVG getAverage(Read read)
     {
 
-        Student student = isRepository.findById(read.getStudentId()).orElseThrow(StudentRecordNotFoundException::new);
+        Student student = isRepository.findByStudentId(read.getStudentId()).orElseThrow(StudentRecordNotFoundException::new);
 
         BigDecimal avg = Calculator.average(student);
 
