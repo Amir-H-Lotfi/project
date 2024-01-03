@@ -16,13 +16,13 @@ spring:
 
   datasource:
     embedded-database-connection: none
-#    url : jdbc:mariadb://localhost:3306/testdb
-#    driver-class-name: org.mariadb.jdbc.Driver
-#    username: root
-#    password: perlhash
+    #    url : jdbc:mariadb://localhost:3306/testdb
+    #    driver-class-name: org.mariadb.jdbc.Driver
+    #    username: root
+    #    password: perlhash
     url: jdbc:h2:mem:test;INIT=CREATE SCHEMA IF NOT EXISTS DBO;
     driver-class-name: org.h2.Driver
-    username: sa
+    username: username
     password: password
   h2:
     console:
