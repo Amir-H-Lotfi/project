@@ -2,13 +2,14 @@ package us.core.pr.controller.abstraction.interfaces;
 
 import java.io.Serializable;
 
-public interface ICrudController<T>
+public interface ICrudController<C, R, U, D, K>
         extends Serializable
 {
-    void create(T t);
+    void create(C c);
 
-    void read(T t);
+    R read(K k);
 
-    void update(T t);
-    void remove(T t);
+    void update(U u);
+
+    void delete(D d);
 }
