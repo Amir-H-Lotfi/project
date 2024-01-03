@@ -5,9 +5,11 @@ import org.springframework.stereotype.Repository;
 import us.core.pr.domain.entity.Professor;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 @Repository
 public interface IProfessorRepository
-        extends JpaRepository<Professor, String>, Serializable
+        extends JpaRepository<Professor, Integer>, Serializable
 {
+    Optional<Professor> findByPersonnelId(String personnelId);
 }
