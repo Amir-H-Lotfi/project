@@ -11,8 +11,4 @@ public class IllegalHeadOfDepartmentAssignmentException
         super();
     }
 
-    public IllegalHeadOfDepartmentAssignmentException(String message)
-    {
-        super(message);
-    }
 }
