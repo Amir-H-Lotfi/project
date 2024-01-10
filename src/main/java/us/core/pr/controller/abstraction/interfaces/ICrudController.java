@@ -5,11 +5,11 @@ import java.io.Serializable;
 public interface ICrudController<C, R, U, D, K>
         extends Serializable
 {
-    void create(C c);
+    void put(C c);
 
-    R read(K k);
+    R get(K k);
 
-    void update(U u);
+    void patch(U u);
 
     void delete(D d);
 }

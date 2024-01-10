@@ -1,45 +1,42 @@
-package us.core.pr.controller;
+package us.core.pr.controller.impl;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import us.core.pr.controller.abstraction.abstracts.AbstractCollegeController;
-import us.core.pr.domain.dto.college.Read;
-import us.core.pr.domain.dto.college.Update;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
-import us.core.pr.service.interfaces.ICollegeService;
+import us.core.pr.service.abstraction.abstracts.AbstractCollegeService;
 
 @RestController
-@RequestMapping(path = "api/v1/college")
+@RequestMapping(path = "api/v1/colleges")
 public class CollegeController
         extends AbstractCollegeController
 {
 
-    public CollegeController(ICollegeService iCollegeService)
+    public CollegeController(AbstractCollegeService iCollegeService)
     {
         super(iCollegeService);
     }
 
-    // add head of department
-    @PatchMapping(path = "/hod")
+    @PatchMapping(path = "/head-of-department")
     public ResponseEntity<Object> setHeadOfDepartment(
-            @ModelAttribute us.core.pr.domain.dto.professor.Read professor, @RequestBody Update college)
+            us.core.pr.domain.dto.professor.Read professor,
+            @RequestBody us.core.pr.domain.dto.college.Update college)
     {
         super.iCollegeService.addHeadOfDepartment(professor, college);
         return ResponseEntity.ok().build();
     }
 
-    // add professor
-    @PatchMapping(path = "/ap")
+    @PatchMapping(path = "/professors")
     public ResponseEntity<Object> addProfessor(
-            @ModelAttribute us.core.pr.domain.dto.professor.Read professor, @RequestBody Update college)
+            us.core.pr.domain.dto.professor.Read professor,
+            @RequestBody us.core.pr.domain.dto.college.Update college)
     {
         super.iCollegeService.addProfessor(professor, college);
         return ResponseEntity.ok().build();
     }
 
-    // get average
-    @GetMapping("/ga")
-    public ResponseEntity<RpCollegeAVG> getAverage(@ModelAttribute Read read)
+    @GetMapping("/professors/courses/reports")
+    public ResponseEntity<RpCollegeAVG> getAverage(us.core.pr.domain.dto.college.Read read)
     {
         RpCollegeAVG rp = iCollegeService.getStudentsAverage(read);
         return ResponseEntity.ok(rp);
