@@ -29,8 +29,7 @@ import us.core.pr.domain.dto.course.Create;
 import us.core.pr.domain.dto.professor.Read;
 import us.core.pr.domain.dto.professor.Update;
 import us.core.pr.domain.dto.reporting.RpProfessorAVG;
-import us.core.pr.service.CollegeService;
-import us.core.pr.service.ProfessorService;
+import us.core.pr.service.impl.ProfessorService;
 
 import java.net.URI;
 
@@ -74,7 +73,7 @@ public class ProfessorControllerIntegrationTest
     public void addCourse() throws Exception
     {
         URI uri = uriBuilder
-                .pathSegment(root, professor, "ac")
+                .pathSegment(root, professor, "/courses")
                 .queryParam("personnelId", "professor#personnel#id")
                 .build().toUri();
 
@@ -98,7 +97,7 @@ public class ProfessorControllerIntegrationTest
     public void getAverage() throws Exception
     {
         URI uri = uriBuilder
-                .pathSegment(root, professor, "ga")
+                .pathSegment(root, professor, "/courses/reports")
                 .queryParam("personnelId", "professor#personnel#id")
                 .queryParam("name", "professor#name")
                 .build().toUri();

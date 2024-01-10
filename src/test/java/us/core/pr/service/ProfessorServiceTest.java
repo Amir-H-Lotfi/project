@@ -1,36 +1,30 @@
 package us.core.pr.service;
 
-import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import providers.ProfessorProvider;
 import us.core.pr.domain.dto.course.Create;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.course.CreateToCourse;
 import us.core.pr.domain.dto.professor.Read;
 import us.core.pr.domain.dto.professor.Update;
 import us.core.pr.domain.dto.reporting.RpCourseTaught;
 import us.core.pr.domain.dto.reporting.RpProfessorAVG;
 import us.core.pr.domain.entity.*;
+import us.core.pr.domain.entity.middle.CourseTaken;
+import us.core.pr.domain.entity.middle.CourseTaught;
 import us.core.pr.repository.IProfessorRepository;
+import us.core.pr.service.impl.ProfessorService;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 //@RunWith(MockitoJUnitRunner.class)
@@ -40,9 +34,9 @@ public class ProfessorServiceTest
     @Mock
     IDataTransferObjectMapperFactory factory;
     @Mock
-    IProfessorRepository             repository;
+    IProfessorRepository repository;
     @InjectMocks
-    ProfessorService                 service;
+    ProfessorService     service;
 
     @Before
     public void initialize()
@@ -55,7 +49,7 @@ public class ProfessorServiceTest
     {
         Professor professor = getProfessor();
 
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(professor));
+        Mockito.when(repository.findByPersonnelId(Mockito.anyString())).thenReturn(Optional.of(professor));
         Mockito.when(factory.create(CreateToCourse.class)).thenReturn(new CreateToCourse());
 
         Update pUpdate = new Update();
@@ -77,7 +71,7 @@ public class ProfessorServiceTest
     {
 
         Professor professor = getProfessor();
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(professor));
+        Mockito.when(repository.findByPersonnelId(Mockito.anyString())).thenReturn(Optional.of(professor));
 
         Read read = new Read();
         read.setPersonnelId(professor.getPersonnelId());

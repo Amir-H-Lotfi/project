@@ -8,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,21 +18,17 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import us.core.pr.domain.dto.college.Update;
 import us.core.pr.domain.dto.professor.Read;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
-import us.core.pr.service.CollegeService;
-import us.core.pr.service.StudentService;
-import us.core.pr.service.interfaces.ICollegeService;
+import us.core.pr.service.impl.CollegeService;
 
 import java.net.URI;
 
@@ -76,7 +71,7 @@ public class CollegeControllerIntegrationTest
     @Test
     public void addHeadOfDepartment() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "hod")
+        URI uri = uriBuilder.pathSegment(root, college, "/head-of-department")
                             .queryParam("personnelId", "professor#personnel#Id")
                             .queryParam("name", "professor#name")
                             .build().toUri();
@@ -100,7 +95,7 @@ public class CollegeControllerIntegrationTest
     @Test
     public void addProfessor() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "ap")
+        URI uri = uriBuilder.pathSegment(root, college, "/professors")
                             .queryParam("personnelId", "professor#personnel#id")
                             .queryParam("name", "professor#name")
                             .build().toUri();
@@ -123,7 +118,7 @@ public class CollegeControllerIntegrationTest
     @Test
     public void getAverage() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "ga")
+        URI uri = uriBuilder.pathSegment(root, college, "/professors/courses/reports")
                             .queryParam("name", "college#name")
                             .build().toUri();
 

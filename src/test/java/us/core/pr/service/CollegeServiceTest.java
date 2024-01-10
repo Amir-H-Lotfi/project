@@ -1,27 +1,25 @@
 package us.core.pr.service;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.api.ThrowableAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import us.core.pr.domain.dto.college.Update;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.professor.ProfessorToRead;
-import us.core.pr.domain.dto.mapper.impl.professor.ReadToProfessor;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.professor.ReadToProfessor;
 import us.core.pr.domain.dto.professor.Read;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 import us.core.pr.domain.entity.*;
-import us.core.pr.exception.IllegalHeadOfDepartmentAssignmentException;
+import us.core.pr.domain.entity.middle.CourseTaken;
+import us.core.pr.exception.service.IllegalHeadOfDepartmentAssignmentException;
 import us.core.pr.repository.ICollegeRepository;
+import us.core.pr.service.impl.CollegeService;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -36,9 +34,9 @@ public class CollegeServiceTest
     @Mock
     IDataTransferObjectMapperFactory factory;
     @Mock
-    ICollegeRepository               repository;
+    ICollegeRepository repository;
     @InjectMocks
-    CollegeService                   service;
+    CollegeService     service;
 
     @Before
     public void initialize()
@@ -59,7 +57,7 @@ public class CollegeServiceTest
         Update cUpdate = new Update();
         cUpdate.setName("college#name");
 
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(college));
+        Mockito.when(repository.findByName(Mockito.anyString())).thenReturn(Optional.of(college));
         Mockito.when(factory.create(ReadToProfessor.class)).thenReturn(new ReadToProfessor());
 
         service.addHeadOfDepartment(pRead, cUpdate);
@@ -81,7 +79,7 @@ public class CollegeServiceTest
         Update cUpdate = new Update();
         cUpdate.setName("college#name");
 
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(college));
+        Mockito.when(repository.findByName(Mockito.anyString())).thenReturn(Optional.of(college));
         Mockito.when(factory.create(ReadToProfessor.class)).thenReturn(new ReadToProfessor());
 
 
@@ -95,7 +93,7 @@ public class CollegeServiceTest
         College college = getCollege(Boolean.FALSE);
 
         Mockito.when(factory.create(ReadToProfessor.class)).thenReturn(new ReadToProfessor());
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(college));
+        Mockito.when(repository.findByName(Mockito.anyString())).thenReturn(Optional.of(college));
 
         Read pRead = new Read();
         pRead.setPersonnelId("professor#personnel#id");
@@ -113,7 +111,7 @@ public class CollegeServiceTest
     public void getStudentAverage()
     {
         College college = getCollege(Boolean.FALSE);
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(college));
+        Mockito.when(repository.findByName(Mockito.anyString())).thenReturn(Optional.of(college));
 
         us.core.pr.domain.dto.college.Read read = new us.core.pr.domain.dto.college.Read();
         read.setName("college#name");

@@ -3,8 +3,8 @@ server:
 path:
   root: api/v1
   student:
-    value: student
+    value: students
   college:
-    value: college
+    value: colleges
   professor:
-    value: professor
+    value: professors

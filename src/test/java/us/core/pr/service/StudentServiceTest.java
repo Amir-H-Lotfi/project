@@ -4,29 +4,26 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import us.core.pr.domain.dto.course.Create;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.course.CreateToCourse;
 import us.core.pr.domain.dto.reporting.RpStudentAVG;
 import us.core.pr.domain.dto.student.Read;
 import us.core.pr.domain.dto.student.Update;
 import us.core.pr.domain.entity.Course;
-import us.core.pr.domain.entity.CourseTaken;
+import us.core.pr.domain.entity.middle.CourseTaken;
 import us.core.pr.domain.entity.Student;
 import us.core.pr.repository.IStudentRepository;
+import us.core.pr.service.impl.StudentService;
 
 import java.math.BigDecimal;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //@RunWith(SpringRunner.class)
 //@RunWith(MockitoJUnitRunner.class)
@@ -37,9 +34,9 @@ public class StudentServiceTest
     @Mock
     IDataTransferObjectMapperFactory factory;
     @Mock
-    IStudentRepository               repository;
+    IStudentRepository repository;
     @InjectMocks
-    StudentService                   service;
+    StudentService     service;
 
     @Before
     public void initialize()
@@ -58,7 +55,7 @@ public class StudentServiceTest
         Update sUpdate = new Update();
         sUpdate.setStudentId("student#id");
 
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(student));
+        Mockito.when(repository.findByStudentId(Mockito.anyString())).thenReturn(Optional.of(student));
         Mockito.when(factory.create(CreateToCourse.class)).thenReturn(new CreateToCourse());
         service.addCourse(sUpdate, cCreate);
 
@@ -81,7 +78,7 @@ public class StudentServiceTest
         read.setStudentId("student#id");
         read.setName("student#name");
 
-        Mockito.when(repository.findById(Mockito.anyString())).thenReturn(Optional.of(student));
+        Mockito.when(repository.findByStudentId(Mockito.anyString())).thenReturn(Optional.of(student));
 
 
         RpStudentAVG rp = service.getAverage(read);

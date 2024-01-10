@@ -1,14 +1,11 @@
 package us.core.pr.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.jndi.toolkit.url.Uri;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.BDDMockito;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -32,9 +29,8 @@ import us.core.pr.domain.dto.course.Create;
 import us.core.pr.domain.dto.reporting.RpStudentAVG;
 import us.core.pr.domain.dto.student.Read;
 import us.core.pr.domain.dto.student.Update;
-import us.core.pr.service.StudentService;
+import us.core.pr.service.impl.StudentService;
 
-import java.math.BigDecimal;
 import java.net.URI;
 
 
@@ -78,7 +74,7 @@ public class StudentControllerIntegrationTest
     public void addCourse() throws Exception
     {
         URI uri = uriBuilder
-                .pathSegment(root, student, "/ac")
+                .pathSegment(root, student, "/courses")
                 .queryParam("studentId", "studentId")
                 .build()
                 .toUri();
@@ -104,7 +100,7 @@ public class StudentControllerIntegrationTest
     @Test
     public void getAverage() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, student, "ga")
+        URI uri = uriBuilder.pathSegment(root, student, "/courses/reports")
                             .queryParam("studentId", "studentId")
                             .queryParam("name", "studentName")
                             .build().toUri();
