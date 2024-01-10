@@ -1,24 +1,26 @@
 package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
-import us.core.pr.domain.crud.abstracts.AbstractProfessorJpaCrud;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.professor.CreateToProfessor;
-import us.core.pr.domain.dto.mapper.impl.professor.DeleteToProfessor;
-import us.core.pr.domain.dto.mapper.impl.professor.ProfessorToRead;
-import us.core.pr.domain.dto.mapper.impl.professor.UpdateToProfessor;
-import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
+import us.core.pr.domain.crud.abstractions.abstracts.AbstractProfessorJpaCrud;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.professor.CreateToProfessor;
+import us.core.pr.utils.mapper.impl.professor.DeleteToProfessor;
+import us.core.pr.utils.mapper.impl.professor.ProfessorToRead;
+import us.core.pr.utils.mapper.impl.professor.UpdateToProfessor;
+import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
 import us.core.pr.domain.entity.Professor;
-import us.core.pr.exception.RecordNotFoundException;
+import us.core.pr.exception.entity.ProfessorRecordNotFoundException;
+import us.core.pr.exception.entity.RecordNotFoundException;
 import us.core.pr.repository.IProfessorRepository;
 import us.core.pr.domain.dto.professor.*;
+import us.core.pr.exception.jpa.professor.*;
 
-public class ProfessorJpaCrud
+public class ProfessorJpaCrudOperations
         extends AbstractProfessorJpaCrud
 {
     private final IDataTransferObjectMapperFactory factory;
 
-    public ProfessorJpaCrud(IProfessorRepository ipRepository, IDataTransferObjectMapperFactory factory)
+    public ProfessorJpaCrudOperations(IProfessorRepository ipRepository, IDataTransferObjectMapperFactory factory)
     {
         super(ipRepository);
         this.factory = factory;
@@ -27,7 +29,6 @@ public class ProfessorJpaCrud
     @Override
     public void create(Create create)
     {
-
         try
         {
             IDataTransferObjectMapper<Create, Professor> mapper = factory.create(CreateToProfessor.class);
@@ -36,7 +37,7 @@ public class ProfessorJpaCrud
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new ProfessorEntityCreatingFailureException(e);
         }
     }
 
@@ -46,12 +47,12 @@ public class ProfessorJpaCrud
         try
         {
             IDataTransferObjectMapper<Professor, Read> mapper = factory.create(ProfessorToRead.class);
-            Professor professor = super.ipRepository.findByPersonnelId(key).orElseThrow(RecordNotFoundException::new);
+            Professor professor = super.ipRepository.findByPersonnelId(key).orElseThrow(ProfessorRecordNotFoundException::new);
             return mapper.from(professor);
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new ProfessorEntityReadingFailureException(e);
         }
     }
 
@@ -66,7 +67,7 @@ public class ProfessorJpaCrud
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new ProfessorEntityUpdatingFailureException(e);
         }
     }
 
@@ -81,11 +82,12 @@ public class ProfessorJpaCrud
             {
                 super.ipRepository.delete(professor);
             }
-            else throw new RecordNotFoundException();
+            else
+                throw new ProfessorRecordNotFoundException();
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalAccessException | InstantiationException | RecordNotFoundException e)
         {
-            throw new RuntimeException(e);
+            throw new ProfessorEntityRemovingFailureException(e);
         }
     }
 }

@@ -2,28 +2,28 @@ package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
 import org.springframework.transaction.annotation.Transactional;
-import us.core.pr.domain.dto.mapper.impl.student.CreateToStudent;
-import us.core.pr.domain.dto.mapper.impl.student.DeleteToStudent;
-import us.core.pr.domain.dto.mapper.impl.student.StudentToRead;
-import us.core.pr.domain.dto.mapper.impl.student.UpdateToStudent;
-import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.student.CreateToStudent;
+import us.core.pr.utils.mapper.impl.student.DeleteToStudent;
+import us.core.pr.utils.mapper.impl.student.StudentToRead;
+import us.core.pr.utils.mapper.impl.student.UpdateToStudent;
+import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.domain.dto.student.*;
 import us.core.pr.domain.entity.Student;
-import us.core.pr.exception.ReadEntityFailureException;
-import us.core.pr.exception.RecordNotFoundException;
+import us.core.pr.exception.entity.StudentRecordNotFoundException;
 import us.core.pr.repository.IStudentRepository;
-import us.core.pr.domain.crud.abstracts.AbstractStudentJpaCrud;
+import us.core.pr.domain.crud.abstractions.abstracts.AbstractStudentJpaCrud;
+import us.core.pr.exception.jpa.student.*;
 
 import javax.persistence.EntityNotFoundException;
 
 @Transactional(rollbackFor = Exception.class)
-public class StudentJpaCrud
+public class StudentJpaCrudOperations
         extends AbstractStudentJpaCrud
 {
     private final IDataTransferObjectMapperFactory factory;
 
-    public StudentJpaCrud(IStudentRepository iStudentRepository, IDataTransferObjectMapperFactory factory)
+    public StudentJpaCrudOperations(IStudentRepository iStudentRepository, IDataTransferObjectMapperFactory factory)
     {
         super(iStudentRepository);
         this.factory = factory;
@@ -38,8 +38,9 @@ public class StudentJpaCrud
             Student student = mapper.from(create);
             isRepository.saveAndFlush(student);
         }
-        catch (Exception ignored)
+        catch (IllegalAccessException | InstantiationException e)
         {
+            throw new StudentEntityCreatingFailureException(e);
         }
     }
 
@@ -53,11 +54,10 @@ public class StudentJpaCrud
             Read read = mapper.from(student);
             return read;
         }
-        catch (Exception ignored)
+        catch (IllegalAccessException | InstantiationException e)
         {
-
+            throw new StudentEntityReadingFailureException(e);
         }
-        throw new ReadEntityFailureException();
     }
 
     @Override
@@ -65,13 +65,13 @@ public class StudentJpaCrud
     {
         try
         {
-
             IDataTransferObjectMapper<Update, Student> mapper = factory.create(UpdateToStudent.class);
             Student student = mapper.from(update);
             isRepository.saveAndFlush(student);
         }
-        catch (Exception ignored)
+        catch (IllegalAccessException | InstantiationException e)
         {
+            throw new StudentEntityUpdatingFailureException(e);
         }
     }
 
@@ -86,11 +86,12 @@ public class StudentJpaCrud
             {
                 isRepository.delete(student);
             }
-            else throw new RecordNotFoundException();
+            else
+                throw new StudentRecordNotFoundException();
         }
-        catch (Exception ignored)
+        catch (IllegalAccessException | InstantiationException | StudentRecordNotFoundException e)
         {
-
+            throw new StudentEntityRemovingFailureException(e);
         }
     }
 }

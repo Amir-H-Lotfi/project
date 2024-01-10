@@ -1,4 +1,4 @@
-package us.core.pr.domain.crud.interfaces;
+package us.core.pr.domain.crud.abstractions.interfaces;
 
 import java.io.Serializable;
 

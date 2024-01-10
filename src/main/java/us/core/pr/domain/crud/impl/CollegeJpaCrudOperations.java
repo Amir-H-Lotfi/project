@@ -1,25 +1,26 @@
 package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
-import us.core.pr.domain.crud.abstracts.AbstractCollegeJpaCrud;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.college.CollegeToRead;
-import us.core.pr.domain.dto.mapper.impl.college.CreateToCollege;
-import us.core.pr.domain.dto.mapper.impl.college.DeleteToCollege;
-import us.core.pr.domain.dto.mapper.impl.college.UpdateToCollege;
-import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
+import us.core.pr.domain.crud.abstractions.abstracts.AbstractCollegeJpaCrud;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.college.CollegeToRead;
+import us.core.pr.utils.mapper.impl.college.CreateToCollege;
+import us.core.pr.utils.mapper.impl.college.DeleteToCollege;
+import us.core.pr.utils.mapper.impl.college.UpdateToCollege;
+import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
 import us.core.pr.domain.entity.College;
-import us.core.pr.exception.RecordNotFoundException;
+import us.core.pr.exception.entity.CollegeRecordNotFoundException;
+import us.core.pr.exception.entity.RecordNotFoundException;
 import us.core.pr.repository.ICollegeRepository;
 import us.core.pr.domain.dto.college.*;
-
-public class CollegeJpaCrud
+import us.core.pr.exception.jpa.college.*;
+public class CollegeJpaCrudOperations
         extends AbstractCollegeJpaCrud
 {
 
     private final IDataTransferObjectMapperFactory factory;
 
-    public CollegeJpaCrud(ICollegeRepository icRepository, IDataTransferObjectMapperFactory factory)
+    public CollegeJpaCrudOperations(ICollegeRepository icRepository, IDataTransferObjectMapperFactory factory)
     {
         super(icRepository);
         this.factory = factory;
@@ -38,7 +39,7 @@ public class CollegeJpaCrud
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new CollegeEntityCreatingFailureException(e);
         }
     }
 
@@ -48,13 +49,13 @@ public class CollegeJpaCrud
         try
         {
             IDataTransferObjectMapper<College, Read> mapper = factory.create(CollegeToRead.class);
-            College college = super.iCollegeRepository.findByName(key).orElseThrow(RecordNotFoundException::new);
+            College college = super.iCollegeRepository.findByName(key).orElseThrow(CollegeRecordNotFoundException::new);
             Read read = mapper.from(college);
             return read;
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new CollegeEntityReadingFailureException(e);
         }
     }
 
@@ -69,7 +70,7 @@ public class CollegeJpaCrud
         }
         catch (IllegalAccessException | InstantiationException e)
         {
-            throw new RuntimeException(e);
+            throw new CollegeEntityUpdatingFailureException(e);
         }
     }
 
@@ -84,11 +85,11 @@ public class CollegeJpaCrud
             {
                 super.iCollegeRepository.delete(college);
             }
-            else throw new RecordNotFoundException();
+            else throw new CollegeRecordNotFoundException();
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalAccessException | InstantiationException | RecordNotFoundException e)
         {
-            throw new RuntimeException(e);
+            throw new CollegeEntityRemovingFailureException(e);
         }
     }
 }
