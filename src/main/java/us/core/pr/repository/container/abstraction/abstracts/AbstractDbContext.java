@@ -1,7 +1,7 @@
-package us.core.pr.repository.container.abstracts;
+package us.core.pr.repository.container.abstraction.abstracts;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import us.core.pr.repository.container.interfaces.IDbContext;
+import us.core.pr.repository.container.abstraction.interfaces.IDbContext;
 
 import java.util.Collections;
 import java.util.LinkedList;

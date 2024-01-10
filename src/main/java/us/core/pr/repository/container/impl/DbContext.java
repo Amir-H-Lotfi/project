@@ -1,8 +1,8 @@
 package us.core.pr.repository.container.impl;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import us.core.pr.exception.RepositoryNotFoundException;
-import us.core.pr.repository.container.abstracts.AbstractDbContext;
+import us.core.pr.exception.repository.RepositoryNotFoundException;
+import us.core.pr.repository.container.abstraction.abstracts.AbstractDbContext;
 
 
 public class DbContext
