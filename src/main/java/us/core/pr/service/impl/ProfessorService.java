@@ -1,25 +1,23 @@
-package us.core.pr.service;
+package us.core.pr.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.core.pr.domain.crud.interfaces.ICrudOperations;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
-import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
+import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.course.CreateToCourse;
+import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.reporting.RpCourseTaught;
 import us.core.pr.domain.dto.reporting.RpProfessorAVG;
 import us.core.pr.domain.entity.Course;
-import us.core.pr.domain.entity.CourseTaken;
-import us.core.pr.domain.entity.CourseTaught;
+import us.core.pr.domain.entity.middle.CourseTaken;
+import us.core.pr.domain.entity.middle.CourseTaught;
 import us.core.pr.domain.entity.Professor;
-import us.core.pr.exception.RecordNotFoundException;
 import us.core.pr.exception.entity.ProfessorRecordNotFoundException;
 import us.core.pr.repository.IProfessorRepository;
-import us.core.pr.service.abstracts.AbstractProfessorService;
+import us.core.pr.service.abstraction.abstracts.AbstractProfessorService;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.HashSet;
 import java.util.Set;
@@ -71,8 +69,8 @@ public class ProfessorService
     {
         try
         {
-            Professor professor = super.ipRepository.findByPersonnelId(pUpdate.getPersonnelId())
-                                                    .orElseThrow(RecordNotFoundException::new);
+            Professor professor = ipRepository.findByPersonnelId(pUpdate.getPersonnelId())
+                                                    .orElseThrow(ProfessorRecordNotFoundException::new);
             IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
                     factory.create(CreateToCourse.class);
             Course course = mapper.from(cCreate);

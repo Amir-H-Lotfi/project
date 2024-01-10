@@ -1,9 +1,9 @@
-package us.core.pr.service.abstracts;
+package us.core.pr.service.abstraction.abstracts;
 
 import us.core.pr.repository.IStudentRepository;
-import us.core.pr.domain.crud.interfaces.ICrudOperations;
-import us.core.pr.service.interfaces.ICrudService;
-import us.core.pr.service.interfaces.IStudentService;
+import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
+import us.core.pr.service.abstraction.interfaces.ICrudService;
+import us.core.pr.service.abstraction.interfaces.IStudentService;
 import us.core.pr.domain.dto.student.*;
 
 public abstract class AbstractStudentService

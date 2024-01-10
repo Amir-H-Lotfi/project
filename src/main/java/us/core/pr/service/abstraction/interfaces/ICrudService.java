@@ -1,4 +1,4 @@
-package us.core.pr.service.interfaces;
+package us.core.pr.service.abstraction.interfaces;
 
 import java.io.Serializable;
 

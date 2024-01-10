@@ -1,22 +1,20 @@
-package us.core.pr.service;
+package us.core.pr.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.core.pr.domain.dto.mapper.factory.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.domain.dto.mapper.impl.course.CreateToCourse;
-import us.core.pr.domain.dto.mapper.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.course.CreateToCourse;
+import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.reporting.RpStudentAVG;
 import us.core.pr.domain.entity.Course;
-import us.core.pr.domain.entity.CourseTaken;
+import us.core.pr.domain.entity.middle.CourseTaken;
 import us.core.pr.domain.entity.Student;
-import us.core.pr.exception.RecordNotFoundException;
 import us.core.pr.exception.entity.StudentRecordNotFoundException;
 import us.core.pr.repository.IStudentRepository;
-import us.core.pr.service.abstracts.AbstractStudentService;
-import us.core.pr.domain.crud.interfaces.ICrudOperations;
+import us.core.pr.service.abstraction.abstracts.AbstractStudentService;
+import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Random;
 
 import us.core.pr.domain.dto.student.*;
@@ -71,7 +69,7 @@ public class StudentService
         try
         {
             Student student = super.isRepository.findByStudentId(sUpdate.getStudentId())
-                                                .orElseThrow(RecordNotFoundException::new);
+                                                .orElseThrow(StudentRecordNotFoundException::new);
 
             IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
                     factory.create(CreateToCourse.class);

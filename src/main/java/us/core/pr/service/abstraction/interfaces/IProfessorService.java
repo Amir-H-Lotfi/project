@@ -1,4 +1,4 @@
-package us.core.pr.service.interfaces;
+package us.core.pr.service.abstraction.interfaces;
 
 import us.core.pr.domain.dto.course.Create;
 import us.core.pr.domain.dto.professor.Read;

@@ -1,10 +1,10 @@
-package us.core.pr.service.abstracts;
+package us.core.pr.service.abstraction.abstracts;
 
-import us.core.pr.domain.crud.interfaces.ICrudOperations;
+import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
 import us.core.pr.repository.ICollegeRepository;
-import us.core.pr.service.interfaces.ICollegeService;
+import us.core.pr.service.abstraction.interfaces.ICollegeService;
 import us.core.pr.domain.dto.college.*;
-import us.core.pr.service.interfaces.ICrudService;
+import us.core.pr.service.abstraction.interfaces.ICrudService;
 
 public abstract class AbstractCollegeService
         implements ICollegeService, ICrudService<Create, Read, Update, Delete, String>
