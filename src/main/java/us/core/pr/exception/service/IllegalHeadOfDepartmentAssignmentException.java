@@ -1,4 +1,4 @@
-package us.core.pr.exception;
+package us.core.pr.exception.service;
 
 import java.io.Serializable;
 

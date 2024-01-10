@@ -1,17 +1,12 @@
-package us.core.pr.exception;
+package us.core.pr.exception.entity;
 
 
 import java.io.Serializable;
 
-public class RecordNotFoundException
+public abstract class RecordNotFoundException
         extends RuntimeException
         implements Serializable
 {
-    public RecordNotFoundException(String message)
-    {
-        super(message);
-    }
-
     public RecordNotFoundException()
     {
         super();

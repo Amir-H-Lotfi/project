@@ -1,15 +1,14 @@
-package us.core.pr.exception;
+package us.core.pr.exception.repository;
+
+import java.io.Serializable;
 
 public class RepositoryNotFoundException
         extends RuntimeException
+        implements Serializable
 {
     public RepositoryNotFoundException()
     {
         super();
     }
 
-    public RepositoryNotFoundException(String message)
-    {
-        super(message);
-    }
 }
