@@ -3,12 +3,13 @@ package us.core.pr.domain.dto.course;
 import java.io.Serializable;
 
 public class Create
-implements Serializable
+        implements Serializable
 {
-    private String name;
+    private String  name;
     private Integer credit;
 
-    public Create() {
+    public Create()
+    {
 
     }
 

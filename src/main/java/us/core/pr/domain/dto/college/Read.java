@@ -9,7 +9,6 @@ public class Read
 
     public Read()
     {
-        this.name = name;
     }
 
     public String getName()
