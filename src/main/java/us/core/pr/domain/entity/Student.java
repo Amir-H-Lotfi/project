@@ -1,8 +1,8 @@
 package us.core.pr.domain.entity;
 
-import scala.collection.Seq;
-import us.core.pr.domain.entity.constraints.Address;
-import us.core.pr.domain.entity.constraints.PersonName;
+import us.core.pr.domain.entity.base.PersonEntity;
+import us.core.pr.domain.entity.middle.CourseTaken;
+import us.core.pr.validation.annotation.Address;
 import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
@@ -11,25 +11,25 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@SequenceGenerator(name = "default_generator", sequenceName = "ent_student_seq", initialValue = 1, allocationSize = 1)
 @EntityListeners(value = {
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
-@Table(indexes = {
-        @Index(columnList = "studentId", unique = true),
-        @Index(columnList = "name, surname", unique = false),
-        @Index(columnList = "nationalId", unique = true)
-})
+@Table(name = "student",
+        indexes = {
+                @Index(columnList = "studentId", unique = true),
+                @Index(columnList = "name, surname", unique = false),
+                @Index(columnList = "nationalId", unique = true)
+        }
+)
 @Entity
 public class Student
+        extends PersonEntity
         implements Serializable
 {
-    private Integer id;
-    private String  studentId;
-    private String  name;
-    private String  surname;
-    private String  nationalId;
-    private String  address;
+    private String studentId;
+    private String address;
 
     /**
      * relationships
@@ -38,39 +38,10 @@ public class Student
 
     public Student() {}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_stu_gen")
-    @SequenceGenerator(name = "ent_stu_gen", initialValue = 1, allocationSize = 1)
-    public Integer getId()
-    {
-        return this.id;
-    }
-
-    @Column
+    @Column(length = 36)
     public String getStudentId()
     {
         return studentId;
-    }
-
-    @Column(length = 48)
-    @PersonName
-    public String getName()
-    {
-        return name;
-    }
-
-    @Column(length = 48)
-    @PersonName
-    public String getSurname()
-    {
-        return surname;
-    }
-
-    @Column(length = 48)
-    @PersonName
-    public String getNationalId()
-    {
-        return nationalId;
     }
 
     @Column(length = 128)
@@ -86,29 +57,9 @@ public class Student
         return courseTaken;
     }
 
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
-
     public void setStudentId(String studentId)
     {
         this.studentId = studentId;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
-    }
-
-    public void setNationalId(String nationalId)
-    {
-        this.nationalId = nationalId;
     }
 
     public void setAddress(String address)

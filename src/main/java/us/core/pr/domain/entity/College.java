@@ -1,30 +1,30 @@
 package us.core.pr.domain.entity;
 
-import us.core.pr.domain.entity.constraints.CollegeName;
+import us.core.pr.domain.entity.base.BaseEntity;
+import us.core.pr.validation.annotation.CollegeName;
 import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
+@SequenceGenerator(name = "default_generator", sequenceName = "ent_college_seq", allocationSize = 1, initialValue = 1)
 @EntityListeners(value = {
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
-@Table(indexes = {@Index(columnList = "name",unique = true)})
+@Table(name = "college",
+        indexes = {
+                @Index(columnList = "name", unique = true)
+        })
 @Entity
 public class College
+        extends BaseEntity
         implements Serializable
 {
-    private Integer id;
-    private String  name;
+    private String name;
 
-    /**
-     * relationships
-     */
 
     private Professor      headOfDepartment;
     private Set<Course>    courses;
@@ -32,14 +32,6 @@ public class College
     private Set<Professor> professors;
 
     public College() {}
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_col_gen")
-    @SequenceGenerator(name = "ent_col_gen", initialValue = 1, allocationSize = 1)
-    public Integer getId()
-    {
-        return id;
-    }
 
     @Column(length = 48)
     @CollegeName
@@ -73,11 +65,6 @@ public class College
     public Set<Professor> getProfessors()
     {
         return professors;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
     }
 
     public void setName(String name)

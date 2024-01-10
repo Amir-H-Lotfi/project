@@ -1,4 +1,7 @@
-package us.core.pr.domain.entity;
+package us.core.pr.domain.entity.middle;
+
+import us.core.pr.domain.entity.Course;
+import us.core.pr.domain.entity.Professor;
 
 import javax.persistence.*;
 import java.io.Serializable;

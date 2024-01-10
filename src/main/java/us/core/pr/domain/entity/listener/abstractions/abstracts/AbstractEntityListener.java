@@ -1,8 +1,8 @@
-package us.core.pr.domain.entity.listener.abstracts;
+package us.core.pr.domain.entity.listener.abstractions.abstracts;
 
 import org.slf4j.Logger;
-import us.core.pr.domain.entity.listener.interfaces.IEntityPostListener;
-import us.core.pr.domain.entity.listener.interfaces.IEntityPreListener;
+import us.core.pr.domain.entity.listener.abstractions.interfaces.IEntityPostListener;
+import us.core.pr.domain.entity.listener.abstractions.interfaces.IEntityPreListener;
 
 public abstract class AbstractEntityListener
 {

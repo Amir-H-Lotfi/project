@@ -2,7 +2,7 @@ package us.core.pr.domain.entity.listener.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import us.core.pr.domain.entity.listener.abstracts.AbstractEntityListener;
+import us.core.pr.domain.entity.listener.abstractions.abstracts.AbstractEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;

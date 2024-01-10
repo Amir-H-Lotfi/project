@@ -1,4 +1,4 @@
-package us.core.pr.domain.entity.listener.interfaces;
+package us.core.pr.domain.entity.listener.abstractions.interfaces;
 
 public interface IEntityPostListener<E>
         extends IEntityListener<E>

@@ -1,31 +1,34 @@
 package us.core.pr.domain.entity;
 
+import us.core.pr.domain.entity.base.BaseEntity;
 import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
+import us.core.pr.domain.entity.middle.CourseTaken;
+import us.core.pr.domain.entity.middle.CourseTaught;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
+@SequenceGenerator(name = "default_generator", sequenceName = "ent_course_seq", initialValue = 1, allocationSize = 1)
 @EntityListeners(value = {
         EveryEntityListener.PreEveryEntityListener.class,
         EveryEntityListener.PostEveryEntityListener.class
 })
-@Table(indexes = {@Index(columnList = "name", unique = true)})
+@Table(name = "course",
+        indexes = {
+                @Index(columnList = "name", unique = true)
+        })
 @Entity
 public class Course
+        extends BaseEntity
         implements Serializable
 {
 
-    private Integer id;
     private String  name;
     private Integer credit;
 
 
-    /**
-     * relationship
-     */
     private Set<CourseTaught> courseTaught;
     private Set<CourseTaken>  courseTaken;
 
@@ -35,14 +38,6 @@ public class Course
     {
         this.name = name;
         this.credit = credit;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_cour_gen")
-    @SequenceGenerator(name = "ent_cour_gen", initialValue = 1, allocationSize = 1)
-    public Integer getId()
-    {
-        return id;
     }
 
     @Column(length = 64)
@@ -74,11 +69,6 @@ public class Course
     public Set<CourseTaken> getCourseTaken()
     {
         return courseTaken;
-    }
-
-    public void setId(Integer id)
-    {
-        this.id = id;
     }
 
     public void setName(String name)

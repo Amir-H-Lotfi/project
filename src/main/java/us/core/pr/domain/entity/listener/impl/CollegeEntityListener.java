@@ -1,7 +1,7 @@
 package us.core.pr.domain.entity.listener.impl;
 
 import us.core.pr.domain.entity.College;
-import us.core.pr.domain.entity.listener.abstracts.AbstractEntityListener;
+import us.core.pr.domain.entity.listener.abstractions.abstracts.AbstractEntityListener;
 
 import java.io.Serializable;
 

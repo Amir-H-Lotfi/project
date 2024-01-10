@@ -1,5 +1,8 @@
-package us.core.pr.domain.entity;
+package us.core.pr.domain.entity.middle;
 
+
+import us.core.pr.domain.entity.Course;
+import us.core.pr.domain.entity.Student;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -40,9 +43,9 @@ public class CourseTaken
     }
 
     private CompositeKey compositeKey;
-    private Integer      grade;
-    private Student      student;
-    private Course       course;
+    private Integer grade;
+    private Student student;
+    private Course  course;
 
     public CourseTaken() {}
 

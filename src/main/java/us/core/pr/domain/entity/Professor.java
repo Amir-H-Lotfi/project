@@ -1,74 +1,45 @@
 package us.core.pr.domain.entity;
 
-import us.core.pr.domain.entity.constraints.PersonName;
+import us.core.pr.domain.entity.base.PersonEntity;
 import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
+import us.core.pr.domain.entity.middle.CourseTaught;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
+@SequenceGenerator(name = "default_generator", sequenceName = "ent_professor_seq", initialValue = 1, allocationSize = 1)
 @EntityListeners(value = {
-        EveryEntityListener.PreEveryEntityListener.class, EveryEntityListener.PostEveryEntityListener.class
+        EveryEntityListener.PreEveryEntityListener.class,
+        EveryEntityListener.PostEveryEntityListener.class
 })
-@Table(indexes = {
-        @Index(columnList = "personnelId", unique = true),
-        @Index(columnList = "name, surname", unique = false),
-        @Index(columnList = "nationalId", unique = true)
-})
+@Table(name = "professor",
+        indexes = {
+                @Index(columnList = "personnelId", unique = true),
+                @Index(columnList = "name, surname", unique = false),
+                @Index(columnList = "nationalId", unique = true)
+        }
+)
 @Entity
 public class Professor
+        extends PersonEntity
         implements Serializable
 {
-    private Integer id;
-    private String  personnelId;
-    private String  name;
-    private String  surname;
-    private String  nationalId;
+    private String personnelId;
 
-    /**
-     * relationship
-     */
     private College           department;
     private Set<CourseTaught> courseTaught;
 
 
     public Professor() {}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ent_pro_gen")
-    @SequenceGenerator(name = "ent_pro_gen", initialValue = 1, allocationSize = 1)
-    public Integer getId()
-    {
-        return this.id;
-    }
-
+    @Column
     public String getPersonnelId()
     {
         return personnelId;
     }
 
-    @Column(length = 48)
-    @PersonName
-    public String getName()
-    {
-        return name;
-    }
-
-    @Column(length = 48)
-    @PersonName
-    public String getSurname()
-    {
-        return surname;
-    }
-
-    @Column(unique = true)
-    public String getNationalId()
-    {
-        return nationalId;
-    }
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinTable(name = "head_of_department", joinColumns = @JoinColumn(name = "professor_id"), inverseJoinColumns = @JoinColumn(name = "college_name"))
@@ -83,29 +54,10 @@ public class Professor
         return courseTaught;
     }
 
-    public void setId(Integer id)
-    {
-        this.id = id;
-    }
 
     public void setPersonnelId(String personnelId)
     {
         this.personnelId = personnelId;
-    }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
-    public void setSurname(String surname)
-    {
-        this.surname = surname;
-    }
-
-    public void setNationalId(String nationalId)
-    {
-        this.nationalId = nationalId;
     }
 
     public void setDepartment(College department)
