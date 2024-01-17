@@ -2,12 +2,13 @@ package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
 import us.core.pr.domain.crud.abstractions.abstracts.AbstractProfessorJpaCrud;
+import us.core.pr.exception.utils.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.utils.mapper.impl.professor.CreateToProfessor;
 import us.core.pr.utils.mapper.impl.professor.DeleteToProfessor;
 import us.core.pr.utils.mapper.impl.professor.ProfessorToRead;
 import us.core.pr.utils.mapper.impl.professor.UpdateToProfessor;
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.entity.Professor;
 import us.core.pr.exception.entity.ProfessorRecordNotFoundException;
 import us.core.pr.exception.entity.RecordNotFoundException;
@@ -35,7 +36,7 @@ public class ProfessorJpaCrudOperations
             Professor professor = mapper.from(create);
             super.ipRepository.saveAndFlush(professor);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalArgumentException| MapperNotFoundException e)
         {
             throw new ProfessorEntityCreatingFailureException(e);
         }
@@ -50,7 +51,7 @@ public class ProfessorJpaCrudOperations
             Professor professor = super.ipRepository.findByPersonnelId(key).orElseThrow(ProfessorRecordNotFoundException::new);
             return mapper.from(professor);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (MapperNotFoundException | ProfessorRecordNotFoundException e)
         {
             throw new ProfessorEntityReadingFailureException(e);
         }
@@ -65,7 +66,7 @@ public class ProfessorJpaCrudOperations
             Professor professor = mapper.from(update);
             super.ipRepository.saveAndFlush(professor);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalArgumentException | MapperNotFoundException e)
         {
             throw new ProfessorEntityUpdatingFailureException(e);
         }
@@ -85,7 +86,7 @@ public class ProfessorJpaCrudOperations
             else
                 throw new ProfessorRecordNotFoundException();
         }
-        catch (IllegalAccessException | InstantiationException | RecordNotFoundException e)
+        catch (MapperNotFoundException | ProfessorRecordNotFoundException e)
         {
             throw new ProfessorEntityRemovingFailureException(e);
         }

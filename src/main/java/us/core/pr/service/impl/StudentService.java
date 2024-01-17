@@ -2,9 +2,12 @@ package us.core.pr.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import us.core.pr.exception.service.student.StudentFetchingReportFailureException;
+import us.core.pr.exception.service.student.StudentTakingCourseFailureException;
+import us.core.pr.exception.utils.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.utils.mapper.impl.course.CreateToCourse;
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.reporting.RpStudentAVG;
 import us.core.pr.domain.entity.Course;
 import us.core.pr.domain.entity.middle.CourseTaken;
@@ -27,7 +30,8 @@ public class StudentService
 {
     private final IDataTransferObjectMapperFactory factory;
 
-    public StudentService(IDataTransferObjectMapperFactory factory, IStudentRepository isRepository, ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
+    public StudentService(IDataTransferObjectMapperFactory factory, IStudentRepository isRepository,
+            ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
     {
         super(isRepository, iCrudOperations);
         this.factory = factory;
@@ -69,7 +73,7 @@ public class StudentService
         try
         {
             Student student = super.isRepository.findByStudentId(sUpdate.getStudentId())
-                                                .orElseThrow(StudentRecordNotFoundException::new);
+                    .orElseThrow(StudentRecordNotFoundException::new);
 
             IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
                     factory.create(CreateToCourse.class);
@@ -94,9 +98,9 @@ public class StudentService
             isRepository.saveAndFlush(student);
 
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (MapperNotFoundException | StudentRecordNotFoundException e)
         {
-            throw new RuntimeException(e);
+            throw new StudentTakingCourseFailureException(e);
         }
 
     }
@@ -105,16 +109,24 @@ public class StudentService
     public RpStudentAVG getAverage(Read read)
     {
 
-        Student student = isRepository.findByStudentId(read.getStudentId()).orElseThrow(StudentRecordNotFoundException::new);
+        try
+        {
 
-        BigDecimal avg = Calculator.average(student);
+            Student student = isRepository.findByStudentId(read.getStudentId()).orElseThrow(StudentRecordNotFoundException::new);
 
-        RpStudentAVG rp = new RpStudentAVG();
-        rp.setStudentId(read.getStudentId());
-        rp.setName(student.getName());
-        rp.setSurname(student.getSurname());
-        rp.setAverage(avg);
+            BigDecimal avg = Calculator.average(student);
 
-        return rp;
+            RpStudentAVG rp = new RpStudentAVG();
+            rp.setStudentId(read.getStudentId());
+            rp.setName(student.getName());
+            rp.setSurname(student.getSurname());
+            rp.setAverage(avg);
+
+            return rp;
+        }
+        catch (StudentRecordNotFoundException e)
+        {
+            throw new StudentFetchingReportFailureException(e);
+        }
     }
 }

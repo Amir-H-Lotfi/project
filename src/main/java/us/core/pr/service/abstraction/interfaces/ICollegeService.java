@@ -7,12 +7,12 @@ import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 import java.io.Serializable;
 
 public interface ICollegeService
-        extends Serializable
+        extends   Serializable
 {
     void addHeadOfDepartment(Read pRead, Update cUpdate);
 
     void addProfessor(Read pRead, Update cUpdate);
 
-    RpCollegeAVG getStudentsAverage(us.core.pr.domain.dto.college.Read read);
+    RpCollegeAVG reportAverages(us.core.pr.domain.dto.college.Read read);
 
 }

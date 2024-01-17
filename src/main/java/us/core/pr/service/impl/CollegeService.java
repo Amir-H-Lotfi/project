@@ -6,14 +6,18 @@ import org.springframework.transaction.annotation.Transactional;
 import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
 import us.core.pr.domain.dto.college.Create;
 import us.core.pr.domain.dto.college.Read;
+import us.core.pr.exception.service.college.HeadOfDepartmentAssignmentFailureException;
+import us.core.pr.exception.service.college.CollegeFetchingReportFailureException;
+import us.core.pr.exception.service.college.ProfessorToCollegeAssignmentFailureException;
+import us.core.pr.exception.utils.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.utils.mapper.impl.professor.ReadToProfessor;
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 import us.core.pr.domain.entity.College;
 import us.core.pr.domain.entity.Professor;
 import us.core.pr.domain.entity.Student;
-import us.core.pr.exception.service.IllegalHeadOfDepartmentAssignmentException;
+import us.core.pr.exception.service.college.IllegalHeadOfDepartmentAssignmentException;
 import us.core.pr.exception.entity.CollegeRecordNotFoundException;
 import us.core.pr.repository.ICollegeRepository;
 import us.core.pr.service.abstraction.abstracts.AbstractCollegeService;
@@ -35,7 +39,7 @@ public class CollegeService
 
     @Autowired
     public CollegeService(IDataTransferObjectMapperFactory factory,
-                          ICollegeRepository icRepository, ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
+            ICollegeRepository icRepository, ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
     {
         super(icRepository, iCrudOperations);
         this.factory = factory;
@@ -68,18 +72,19 @@ public class CollegeService
 
     @Override
     public void addHeadOfDepartment(us.core.pr.domain.dto.professor.Read pRead,
-                                    Update cUpdate)
+            Update cUpdate)
     {
-        College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
         IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Read, Professor> mapper;
+        College college;
         Professor professor;
         try
         {
+            college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
             mapper = factory.create(ReadToProfessor.class);
         }
-        catch (IllegalAccessException | InstantiationException | IllegalHeadOfDepartmentAssignmentException e)
+        catch (MapperNotFoundException | CollegeRecordNotFoundException e)
         {
-            throw new RuntimeException(e);
+            throw new HeadOfDepartmentAssignmentFailureException(e);
         }
         professor = mapper.from(pRead);
         if (college.getProfessors().contains(professor))
@@ -100,38 +105,46 @@ public class CollegeService
         try
         {
             mapper = factory.create(ReadToProfessor.class);
+            professor = mapper.from(pRead);
+            College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+            college.getProfessors().add(professor);
+            icRepository.saveAndFlush(college);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (CollegeRecordNotFoundException e)
         {
-            throw new RuntimeException(e);
+            throw new ProfessorToCollegeAssignmentFailureException(e);
         }
-        professor = mapper.from(pRead);
-        College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
-        college.getProfessors().add(professor);
-        icRepository.saveAndFlush(college);
     }
 
     @Override
-    public RpCollegeAVG getStudentsAverage(Read read)
+    public RpCollegeAVG reportAverages(Read read)
     {
-        College college = icRepository.findByName(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
-        Set<Student> students = college.getStudents();
-
-        BigDecimal totalAverages = BigDecimal.ZERO, totalStudents = BigDecimal.valueOf(students.size());
-
-        for (Student student : students)
+        try
         {
-            BigDecimal avg = Calculator.average(student);
-            totalAverages = totalAverages.add(avg);
+
+            College college = icRepository.findByName(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+            Set<Student> students = college.getStudents();
+
+            BigDecimal totalAverages = BigDecimal.ZERO, totalStudents = BigDecimal.valueOf(students.size());
+
+            for (Student student : students)
+            {
+                BigDecimal avg = Calculator.average(student);
+                totalAverages = totalAverages.add(avg);
+            }
+
+            totalAverages = totalAverages.divide(totalStudents, RoundingMode.CEILING);
+
+            RpCollegeAVG rp = new RpCollegeAVG();
+            rp.setName(college.getName());
+            rp.setAverage(totalAverages);
+            rp.setStudents(totalStudents);
+            return rp;
         }
-
-        totalAverages = totalAverages.divide(totalStudents, RoundingMode.CEILING);
-
-        RpCollegeAVG rp = new RpCollegeAVG();
-        rp.setName(college.getName());
-        rp.setAverage(totalAverages);
-        rp.setStudents(totalStudents);
-        return rp;
+        catch (CollegeRecordNotFoundException e)
+        {
+            throw new CollegeFetchingReportFailureException(e);
+        }
     }
 
 }

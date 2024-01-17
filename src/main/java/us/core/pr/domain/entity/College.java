@@ -2,7 +2,7 @@ package us.core.pr.domain.entity;
 
 import us.core.pr.domain.entity.base.BaseEntity;
 import us.core.pr.validation.annotation.CollegeName;
-import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
+import us.core.pr.domain.entity.listeners.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -33,8 +33,8 @@ public class College
 
     public College() {}
 
+    @CollegeName(message = "Invalid College Name")
     @Column(length = 48)
-    @CollegeName
     public String getName()
     {
         return name;

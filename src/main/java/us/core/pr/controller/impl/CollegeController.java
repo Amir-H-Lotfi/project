@@ -7,7 +7,7 @@ import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 import us.core.pr.service.abstraction.abstracts.AbstractCollegeService;
 
 @RestController
-@RequestMapping(path = "api/v1/colleges")
+@RequestMapping(path = "api/v1/university/colleges")
 public class CollegeController
         extends AbstractCollegeController
 {
@@ -17,16 +17,18 @@ public class CollegeController
         super(iCollegeService);
     }
 
-    @PatchMapping(path = "/head-of-department")
+    @RequestMapping(method = RequestMethod.PATCH, path = "/personnel/head-of-department")
     public ResponseEntity<Object> setHeadOfDepartment(
             us.core.pr.domain.dto.professor.Read professor,
             @RequestBody us.core.pr.domain.dto.college.Update college)
     {
+
         super.iCollegeService.addHeadOfDepartment(professor, college);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping(path = "/professors")
+
+    @RequestMapping(method = RequestMethod.PATCH, path = "/personnel")
     public ResponseEntity<Object> addProfessor(
             us.core.pr.domain.dto.professor.Read professor,
             @RequestBody us.core.pr.domain.dto.college.Update college)
@@ -35,10 +37,10 @@ public class CollegeController
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/professors/courses/reports")
+    @RequestMapping(method = RequestMethod.GET, path = "/reports")
     public ResponseEntity<RpCollegeAVG> getAverage(us.core.pr.domain.dto.college.Read read)
     {
-        RpCollegeAVG rp = iCollegeService.getStudentsAverage(read);
+        RpCollegeAVG rp = iCollegeService.reportAverages(read);
         return ResponseEntity.ok(rp);
     }
 

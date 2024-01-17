@@ -1,6 +1,7 @@
 package us.core.pr.utils.mapper.impl.student;
 
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.builder.GenericBeanBuilder;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.student.*;
 import us.core.pr.domain.entity.Student;
 
@@ -10,6 +11,12 @@ public class CreateToStudent
     @Override
     public Student from(Create source)
     {
-        return null;
+        return new GenericBeanBuilder<>(Student.class)
+                .with("name", source.getName())
+                .with("surname", source.getSurname())
+                .with("studentId", source.getStudentId())
+                .with("nationalId", source.getNationalId())
+                .with("address", source.getAddress())
+                .build();
     }
 }

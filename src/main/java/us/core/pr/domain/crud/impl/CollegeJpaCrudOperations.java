@@ -2,18 +2,20 @@ package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
 import us.core.pr.domain.crud.abstractions.abstracts.AbstractCollegeJpaCrud;
+import us.core.pr.exception.utils.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.utils.mapper.impl.college.CollegeToRead;
 import us.core.pr.utils.mapper.impl.college.CreateToCollege;
 import us.core.pr.utils.mapper.impl.college.DeleteToCollege;
 import us.core.pr.utils.mapper.impl.college.UpdateToCollege;
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.entity.College;
 import us.core.pr.exception.entity.CollegeRecordNotFoundException;
 import us.core.pr.exception.entity.RecordNotFoundException;
 import us.core.pr.repository.ICollegeRepository;
 import us.core.pr.domain.dto.college.*;
 import us.core.pr.exception.jpa.college.*;
+
 public class CollegeJpaCrudOperations
         extends AbstractCollegeJpaCrud
 {
@@ -37,7 +39,7 @@ public class CollegeJpaCrudOperations
             super.iCollegeRepository.saveAndFlush(college);
 
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (MapperNotFoundException | IllegalArgumentException e)
         {
             throw new CollegeEntityCreatingFailureException(e);
         }
@@ -53,7 +55,7 @@ public class CollegeJpaCrudOperations
             Read read = mapper.from(college);
             return read;
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (MapperNotFoundException | CollegeRecordNotFoundException e)
         {
             throw new CollegeEntityReadingFailureException(e);
         }
@@ -68,7 +70,7 @@ public class CollegeJpaCrudOperations
             College college = mapper.from(read);
             super.iCollegeRepository.saveAndFlush(college);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalArgumentException | MapperNotFoundException e)
         {
             throw new CollegeEntityUpdatingFailureException(e);
         }
@@ -87,7 +89,7 @@ public class CollegeJpaCrudOperations
             }
             else throw new CollegeRecordNotFoundException();
         }
-        catch (IllegalAccessException | InstantiationException | RecordNotFoundException e)
+        catch (MapperNotFoundException | RecordNotFoundException e)
         {
             throw new CollegeEntityRemovingFailureException(e);
         }

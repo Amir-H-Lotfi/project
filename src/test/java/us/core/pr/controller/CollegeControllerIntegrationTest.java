@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.util.UriComponentsBuilder;
 import us.core.pr.domain.dto.college.Update;
@@ -37,6 +39,7 @@ import java.net.URI;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @TestPropertySource(locations = "classpath:application.yaml")
+@Rollback
 public class CollegeControllerIntegrationTest
 {
     MockMvc              mockMvc;
@@ -44,12 +47,11 @@ public class CollegeControllerIntegrationTest
     ObjectMapper         mapper;
 
     @Value("${server.port}")
-    Integer port;
+    Integer               port;
     @Value("${path.root}")
-    String  root;
+    String                root;
     @Value("${path.college.value}")
-    String  college;
-
+    String                college;
     @MockBean
     CollegeService        service;
     @Autowired
@@ -63,18 +65,18 @@ public class CollegeControllerIntegrationTest
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         uriBuilder = UriComponentsBuilder.newInstance().scheme("http")
-                                         .port(port).host("localhost")
-                                         .encode();
+                .port(port).host("localhost")
+                .encode();
         mapper = new ObjectMapper();
     }
 
     @Test
     public void addHeadOfDepartment() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "/head-of-department")
-                            .queryParam("personnelId", "professor#personnel#Id")
-                            .queryParam("name", "professor#name")
-                            .build().toUri();
+        URI uri = uriBuilder.pathSegment(root, college, "/personnel/head-of-department")
+                .queryParam("personnelId", "professor#personnel#Id")
+                .queryParam("name", "professor#name")
+                .build().toUri();
 
         Update update = new Update();
         update.setName("Computer#College");
@@ -87,18 +89,18 @@ public class CollegeControllerIntegrationTest
         Mockito.doNothing().when(service).addProfessor(Mockito.any(Read.class), Mockito.any(Update.class));
 
         mockMvc.perform(patch)
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
 
     }
 
     @Test
     public void addProfessor() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "/professors")
-                            .queryParam("personnelId", "professor#personnel#id")
-                            .queryParam("name", "professor#name")
-                            .build().toUri();
+        URI uri = uriBuilder.pathSegment(root, college, "/personnel")
+                .queryParam("personnelId", "professor#personnel#id")
+                .queryParam("name", "professor#name")
+                .build().toUri();
 
         Update update = new Update();
         update.setName("Art#College");
@@ -111,16 +113,16 @@ public class CollegeControllerIntegrationTest
         Mockito.doNothing().when(service).addProfessor(Mockito.any(Read.class), Mockito.any(Update.class));
 
         mockMvc.perform(patch)
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void getAverage() throws Exception
     {
-        URI uri = uriBuilder.pathSegment(root, college, "/professors/courses/reports")
-                            .queryParam("name", "college#name")
-                            .build().toUri();
+        URI uri = uriBuilder.pathSegment(root, college, "/reports")
+                .queryParam("name", "college#name")
+                .build().toUri();
 
         us.core.pr.domain.dto.college.Read read = new us.core.pr.domain.dto.college.Read();
         read.setName("college#name");
@@ -130,11 +132,11 @@ public class CollegeControllerIntegrationTest
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsBytes(read));
 
-        Mockito.when(service.getStudentsAverage(Mockito.any(us.core.pr.domain.dto.college.Read.class)))
-               .thenReturn(Mockito.any(RpCollegeAVG.class));
+        Mockito.when(service.reportAverages(Mockito.any(us.core.pr.domain.dto.college.Read.class)))
+                .thenReturn(Mockito.any(RpCollegeAVG.class));
         mockMvc.perform(get)
-               .andExpect(MockMvcResultMatchers.status().isOk())
-               .andDo(MockMvcResultHandlers.print());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print());
     }
 
 

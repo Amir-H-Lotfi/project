@@ -1,10 +1,13 @@
 server:
   port: 8080
 path:
-  root: api/v1
+  root: api/v1/university
   student:
     value: students
+    path: [ /courses, /reports ]
   college:
     value: colleges
+    path: [ /personnel/head-of-department, /personnel, /reports ]
   professor:
     value: professors
+    path: [ /courses, /reports ]

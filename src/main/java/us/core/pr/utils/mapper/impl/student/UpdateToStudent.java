@@ -1,6 +1,7 @@
 package us.core.pr.utils.mapper.impl.student;
 
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.builder.GenericBeanBuilder;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.domain.dto.student.*;
 import us.core.pr.domain.entity.Student;
 
@@ -10,6 +11,8 @@ public class UpdateToStudent
     @Override
     public Student from(Update source)
     {
-        return null;
+        return new GenericBeanBuilder<>(Student.class)
+                .with("studentId", source.getStudentId())
+                .build();
     }
 }

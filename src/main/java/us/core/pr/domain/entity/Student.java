@@ -3,7 +3,7 @@ package us.core.pr.domain.entity;
 import us.core.pr.domain.entity.base.PersonEntity;
 import us.core.pr.domain.entity.middle.CourseTaken;
 import us.core.pr.validation.annotation.Address;
-import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
+import us.core.pr.domain.entity.listeners.impl.EveryEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -44,8 +44,8 @@ public class Student
         return studentId;
     }
 
+    @Address(message= "Invalid Student Address")
     @Column(length = 128)
-    @Address
     public String getAddress()
     {
         return address;

@@ -1,7 +1,7 @@
 package us.core.pr.domain.entity;
 
 import us.core.pr.domain.entity.base.PersonEntity;
-import us.core.pr.domain.entity.listener.impl.EveryEntityListener;
+import us.core.pr.domain.entity.listeners.impl.EveryEntityListener;
 import us.core.pr.domain.entity.middle.CourseTaught;
 
 import javax.persistence.*;

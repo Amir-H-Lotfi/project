@@ -3,6 +3,8 @@ package us.core.pr.configuratoin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import us.core.pr.controller.resolver.argument.professor.ReadResolver;
+import us.core.pr.controller.resolver.argument.professor.UpdateResolver;
 import us.core.pr.domain.crud.abstractions.abstracts.AbstractCollegeJpaCrud;
 import us.core.pr.domain.crud.abstractions.abstracts.AbstractProfessorJpaCrud;
 import us.core.pr.domain.crud.abstractions.abstracts.AbstractStudentJpaCrud;
@@ -56,13 +58,13 @@ public class BeanConfiguration
     public Collection<? extends HandlerMethodArgumentResolver> resolvers()
     {
         HandlerMethodArgumentResolver[] resolvers = new HandlerMethodArgumentResolver[]{
-                new us.core.pr.resolver.argument.professor.ReadResolver(),
-                new us.core.pr.resolver.argument.professor.UpdateResolver(),
+                new ReadResolver(),
+                new UpdateResolver(),
 
-                new us.core.pr.resolver.argument.student.ReadResolver(),
-                new us.core.pr.resolver.argument.student.UpdateResolver(),
+                new us.core.pr.controller.resolver.argument.student.ReadResolver(),
+                new us.core.pr.controller.resolver.argument.student.UpdateResolver(),
 
-                new us.core.pr.resolver.argument.college.ReadResolver()
+                new us.core.pr.controller.resolver.argument.college.ReadResolver()
         };
         return Arrays.asList(resolvers);
     }

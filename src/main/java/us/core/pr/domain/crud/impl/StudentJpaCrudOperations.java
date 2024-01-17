@@ -2,11 +2,12 @@ package us.core.pr.domain.crud.impl;
 
 import org.springframework.data.domain.Example;
 import org.springframework.transaction.annotation.Transactional;
+import us.core.pr.exception.utils.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.impl.student.CreateToStudent;
 import us.core.pr.utils.mapper.impl.student.DeleteToStudent;
 import us.core.pr.utils.mapper.impl.student.StudentToRead;
 import us.core.pr.utils.mapper.impl.student.UpdateToStudent;
-import us.core.pr.utils.mapper.abstractions.interfaces.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.domain.dto.student.*;
 import us.core.pr.domain.entity.Student;
@@ -38,7 +39,7 @@ public class StudentJpaCrudOperations
             Student student = mapper.from(create);
             isRepository.saveAndFlush(student);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalArgumentException | MapperNotFoundException e)
         {
             throw new StudentEntityCreatingFailureException(e);
         }
@@ -50,11 +51,11 @@ public class StudentJpaCrudOperations
         try
         {
             IDataTransferObjectMapper<Student, Read> mapper = factory.create(StudentToRead.class);
-            Student student = isRepository.findByStudentId(key).orElseThrow(EntityNotFoundException::new);
+            Student student = isRepository.findByStudentId(key).orElseThrow(StudentRecordNotFoundException::new);
             Read read = mapper.from(student);
             return read;
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (MapperNotFoundException | StudentRecordNotFoundException e)
         {
             throw new StudentEntityReadingFailureException(e);
         }
@@ -69,7 +70,7 @@ public class StudentJpaCrudOperations
             Student student = mapper.from(update);
             isRepository.saveAndFlush(student);
         }
-        catch (IllegalAccessException | InstantiationException e)
+        catch (IllegalArgumentException | MapperNotFoundException e)
         {
             throw new StudentEntityUpdatingFailureException(e);
         }
@@ -89,7 +90,7 @@ public class StudentJpaCrudOperations
             else
                 throw new StudentRecordNotFoundException();
         }
-        catch (IllegalAccessException | InstantiationException | StudentRecordNotFoundException e)
+        catch (MapperNotFoundException | StudentRecordNotFoundException e)
         {
             throw new StudentEntityRemovingFailureException(e);
         }

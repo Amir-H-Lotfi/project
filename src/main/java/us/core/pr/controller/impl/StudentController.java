@@ -14,7 +14,7 @@ import us.core.pr.domain.dto.student.Update;
 import us.core.pr.service.abstraction.abstracts.AbstractStudentService;
 
 @RestController
-@RequestMapping(path = "api/v1/students")
+@RequestMapping(path = "api/v1/university/students")
 public class StudentController
         extends AbstractStudentController
 {
@@ -33,7 +33,7 @@ public class StudentController
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(path = "/courses/reports")
+    @GetMapping(path = "/reports")
     public ResponseEntity<RpStudentAVG> getAverage(us.core.pr.domain.dto.student.Read read)
     {
         RpStudentAVG rp = iStudentService.getAverage(read);

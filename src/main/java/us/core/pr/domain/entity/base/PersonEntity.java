@@ -17,11 +17,11 @@ public abstract class PersonEntity
     protected String nationalId;
 
 
-    @Name
+    @Name(message = "Invalid Person Name")
     @Column(length = 48)
     public String getName()
     {
-        Validator validator ;
+        Validator validator;
         return name;
     }
 
@@ -30,7 +30,7 @@ public abstract class PersonEntity
         this.name = name;
     }
 
-    @Name
+    @Name(message = "Invaid Person Surname")
     @Column(length = 48)
     public String getSurname()
     {

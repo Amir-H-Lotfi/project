@@ -10,7 +10,7 @@ import us.core.pr.domain.dto.reporting.RpProfessorAVG;
 import us.core.pr.service.abstraction.abstracts.AbstractProfessorService;
 
 @RestController
-@RequestMapping(path = "api/v1/professors")
+@RequestMapping(path = "api/v1/university/professors")
 public class ProfessorController
         extends AbstractProfessorController
 {
@@ -28,7 +28,7 @@ public class ProfessorController
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(path = "/courses/reports")
+    @GetMapping(path = "/reports")
     public ResponseEntity<RpProfessorAVG> getAverage(us.core.pr.domain.dto.professor.Read read)
     {
         RpProfessorAVG rp = iProfessorService.getAverage(read);

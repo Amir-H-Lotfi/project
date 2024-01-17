@@ -17,7 +17,7 @@ import us.core.pr.domain.dto.professor.Read;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
 import us.core.pr.domain.entity.*;
 import us.core.pr.domain.entity.middle.CourseTaken;
-import us.core.pr.exception.service.IllegalHeadOfDepartmentAssignmentException;
+import us.core.pr.exception.service.college.IllegalHeadOfDepartmentAssignmentException;
 import us.core.pr.repository.ICollegeRepository;
 import us.core.pr.service.impl.CollegeService;
 
@@ -115,7 +115,7 @@ public class CollegeServiceTest
 
         us.core.pr.domain.dto.college.Read read = new us.core.pr.domain.dto.college.Read();
         read.setName("college#name");
-        RpCollegeAVG rp = service.getStudentsAverage(read);
+        RpCollegeAVG rp = service.reportAverages(read);
         Assertions.assertThat(rp.getName()).isEqualTo(read.getName());
         Assertions.assertThat(rp.getStudents()).isEqualTo(BigDecimal.valueOf(2));
         Assertions.assertThat(rp.getAverage()).isBetween(BigDecimal.valueOf(15), BigDecimal.valueOf(17));
