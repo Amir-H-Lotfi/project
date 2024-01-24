@@ -1,8 +1,11 @@
 package us.core.pr.domain.dto.college;
 
+import us.core.pr.domain.dto.BaseDTO;
+
 import java.io.Serializable;
 
 public class Read
+        extends BaseDTO
         implements Serializable
 {
     private String name;

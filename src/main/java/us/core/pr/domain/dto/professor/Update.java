@@ -1,8 +1,11 @@
 package us.core.pr.domain.dto.professor;
 
+import us.core.pr.domain.dto.BaseDTO;
+
 import java.io.Serializable;
 
 public class Update
+        extends BaseDTO
         implements Serializable
 {
     private String personnelId;

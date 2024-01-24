@@ -16,16 +16,16 @@ public class ReadResolver
     @Override
     public boolean supportsParameter(MethodParameter methodParameter)
     {
-        return methodParameter.getParameter().getType().isAssignableFrom(us.core.pr.domain.dto.college.Read.class) ;
+        return methodParameter.getParameter().getType().isAssignableFrom(us.core.pr.domain.dto.college.Read.class);
     }
 
     @Override
     public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
-            NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory) throws Exception
+            NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory)
     {
-        Read read = new Read() ;
-        String name = nativeWebRequest.getParameter("name") ;
+        Read read = new Read();
+        String name = nativeWebRequest.getParameter("name");
         read.setName(name);
-        return read ;
+        return read;
     }
 }

@@ -1,6 +1,6 @@
 package us.core.pr.utils.mapper.factory.abstractions.interfaces;
 
-import us.core.pr.exception.utils.mapper.MapperNotFoundException;
+import us.core.pr.error.exception.mapper.MapperNotFoundException;
 import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 
 import java.io.Serializable;

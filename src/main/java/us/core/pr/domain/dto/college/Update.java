@@ -1,7 +1,8 @@
 package us.core.pr.domain.dto.college;
 
+
+
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 public class Update
         implements Serializable
@@ -10,7 +11,9 @@ public class Update
 
     public Update()
     {
+
     }
+
 
     public String getName()
     {

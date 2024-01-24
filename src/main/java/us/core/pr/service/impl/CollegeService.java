@@ -1,85 +1,54 @@
 package us.core.pr.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
-import us.core.pr.domain.dto.college.Create;
 import us.core.pr.domain.dto.college.Read;
-import us.core.pr.exception.service.college.HeadOfDepartmentAssignmentFailureException;
-import us.core.pr.exception.service.college.CollegeFetchingReportFailureException;
-import us.core.pr.exception.service.college.ProfessorToCollegeAssignmentFailureException;
-import us.core.pr.exception.utils.mapper.MapperNotFoundException;
-import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.utils.mapper.impl.professor.ReadToProfessor;
-import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
+import us.core.pr.domain.dto.college.Update;
 import us.core.pr.domain.dto.reporting.RpCollegeAVG;
-import us.core.pr.domain.entity.College;
-import us.core.pr.domain.entity.Professor;
-import us.core.pr.domain.entity.Student;
-import us.core.pr.exception.service.college.IllegalHeadOfDepartmentAssignmentException;
-import us.core.pr.exception.entity.CollegeRecordNotFoundException;
+import us.core.pr.domain.db.entities.university.College;
+import us.core.pr.domain.db.entities.university.Professor;
+import us.core.pr.domain.db.entities.university.Student;
+import us.core.pr.error.exception.entity.CollegeRecordNotFoundException;
+import us.core.pr.error.exception.service.college.CollegeFetchingReportFailureException;
+import us.core.pr.error.exception.service.college.HeadOfDepartmentAssignmentFailureException;
+import us.core.pr.error.exception.service.college.IllegalHeadOfDepartmentAssignmentException;
+import us.core.pr.error.exception.service.college.ProfessorToCollegeAssignmentFailureException;
+import us.core.pr.error.exception.mapper.MapperNotFoundException;
 import us.core.pr.repository.ICollegeRepository;
-import us.core.pr.service.abstraction.abstracts.AbstractCollegeService;
-import us.core.pr.domain.dto.college.*;
+import us.core.pr.service.abstraction.AbstractGenericJpaService;
 import us.core.pr.utils.Calculator;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.university.professor.ReadToProfessor;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Set;
+import java.util.*;
 
 
 @Service
 @Transactional
 public class CollegeService
-        extends AbstractCollegeService
+        extends AbstractGenericJpaService<College, Integer, ICollegeRepository>
 {
 
-    private final IDataTransferObjectMapperFactory factory;
+    private IDataTransferObjectMapperFactory factory;
 
-    @Autowired
-    public CollegeService(IDataTransferObjectMapperFactory factory,
-            ICollegeRepository icRepository, ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
+    public CollegeService(ICollegeRepository icRepository, IDataTransferObjectMapperFactory factory)
     {
-        super(icRepository, iCrudOperations);
+        super(icRepository);
         this.factory = factory;
     }
 
 
-    @Override
-    public void createEntity(Create entity)
-    {
-        super.iCrudOperations.create(entity);
-    }
-
-    @Override
-    public Read readEntity(String key)
-    {
-        return super.iCrudOperations.read(key);
-    }
-
-    @Override
-    public void updateEntity(Update entity)
-    {
-        super.iCrudOperations.update(entity);
-    }
-
-    @Override
-    public void deleteEntity(Delete entity)
-    {
-        super.iCrudOperations.delete(entity);
-    }
-
-    @Override
-    public void addHeadOfDepartment(us.core.pr.domain.dto.professor.Read pRead,
-            Update cUpdate)
+    public void addHeadOfDepartment(us.core.pr.domain.dto.professor.Read pRead, Update cUpdate)
     {
         IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Read, Professor> mapper;
         College college;
         Professor professor;
         try
         {
-            college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+            college = repository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
             mapper = factory.create(ReadToProfessor.class);
         }
         catch (MapperNotFoundException | CollegeRecordNotFoundException e)
@@ -91,13 +60,12 @@ public class CollegeService
         {
             college.setHeadOfDepartment(professor);
             professor.setDepartment(college);
-            icRepository.saveAndFlush(college);
+            repository.saveAndFlush(college);
         }
         else throw new IllegalHeadOfDepartmentAssignmentException();
     }
 
 
-    @Override
     public void addProfessor(us.core.pr.domain.dto.professor.Read pRead, Update cUpdate)
     {
         IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Read, Professor> mapper;
@@ -106,9 +74,9 @@ public class CollegeService
         {
             mapper = factory.create(ReadToProfessor.class);
             professor = mapper.from(pRead);
-            College college = icRepository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+            College college = repository.findByName(cUpdate.getName()).orElseThrow(CollegeRecordNotFoundException::new);
             college.getProfessors().add(professor);
-            icRepository.saveAndFlush(college);
+            repository.saveAndFlush(college);
         }
         catch (CollegeRecordNotFoundException e)
         {
@@ -116,13 +84,12 @@ public class CollegeService
         }
     }
 
-    @Override
     public RpCollegeAVG reportAverages(Read read)
     {
         try
         {
 
-            College college = icRepository.findByName(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
+            College college = repository.findByName(read.getName()).orElseThrow(CollegeRecordNotFoundException::new);
             Set<Student> students = college.getStudents();
 
             BigDecimal totalAverages = BigDecimal.ZERO, totalStudents = BigDecimal.valueOf(students.size());

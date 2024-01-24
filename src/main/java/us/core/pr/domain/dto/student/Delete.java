@@ -1,8 +1,12 @@
 package us.core.pr.domain.dto.student;
 
+import us.core.pr.domain.dto.BaseDTO;
+
 import java.io.Serializable;
 
+
 public class Delete
+        extends BaseDTO
         implements Serializable
 {
     private String name;

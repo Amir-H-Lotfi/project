@@ -1,81 +1,51 @@
 package us.core.pr.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import us.core.pr.domain.crud.abstractions.interfaces.ICrudOperations;
-import us.core.pr.exception.service.professor.ProfessorAddingCourseFailureException;
-import us.core.pr.exception.service.professor.ProfessorFetchingReportFailureException;
-import us.core.pr.exception.utils.mapper.MapperNotFoundException;
-import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.utils.mapper.impl.course.CreateToCourse;
-import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
+import us.core.pr.domain.dto.course.Create;
+import us.core.pr.domain.dto.professor.Read;
+import us.core.pr.domain.dto.professor.Update;
 import us.core.pr.domain.dto.reporting.RpCourseTaught;
 import us.core.pr.domain.dto.reporting.RpProfessorAVG;
-import us.core.pr.domain.entity.Course;
-import us.core.pr.domain.entity.middle.CourseTaken;
-import us.core.pr.domain.entity.middle.CourseTaught;
-import us.core.pr.domain.entity.Professor;
-import us.core.pr.exception.entity.ProfessorRecordNotFoundException;
+import us.core.pr.domain.db.entities.university.Course;
+import us.core.pr.domain.db.entities.university.Professor;
+import us.core.pr.domain.db.entities.university.mdt.CourseTaken;
+import us.core.pr.domain.db.entities.university.mdt.CourseTaught;
+import us.core.pr.error.exception.entity.ProfessorRecordNotFoundException;
+import us.core.pr.error.exception.service.professor.ProfessorAddingCourseFailureException;
+import us.core.pr.error.exception.service.professor.ProfessorFetchingReportFailureException;
+import us.core.pr.error.exception.mapper.MapperNotFoundException;
 import us.core.pr.repository.IProfessorRepository;
-import us.core.pr.service.abstraction.abstracts.AbstractProfessorService;
+import us.core.pr.service.abstraction.AbstractGenericJpaService;
+import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
+import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
+import us.core.pr.utils.mapper.impl.university.course.CreateToCourse;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashSet;
-import java.util.Set;
-
-import us.core.pr.domain.dto.professor.*;
+import java.util.*;
 
 @Service
 @Transactional
 public class ProfessorService
-        extends AbstractProfessorService
+        extends AbstractGenericJpaService<Professor, Integer, IProfessorRepository>
 {
 
-    private final IDataTransferObjectMapperFactory factory;
+    private IDataTransferObjectMapperFactory factory;
 
-    @Autowired
-    public ProfessorService(IDataTransferObjectMapperFactory factory, IProfessorRepository ipRepository,
-            ICrudOperations<Create, Read, Update, Delete, String> iCrudOperations)
+    public ProfessorService(IProfessorRepository ipRepository, IDataTransferObjectMapperFactory factory)
     {
-        super(ipRepository, iCrudOperations);
+        super(ipRepository);
         this.factory = factory;
     }
 
-
-    @Override
-    public void createEntity(Create entity)
-    {
-        super.iCrudOperations.create(entity);
-    }
-
-    @Override
-    public Read readEntity(String key)
-    {
-        return super.iCrudOperations.read(key);
-    }
-
-    @Override
-    public void updateEntity(Update entity)
-    {
-        super.iCrudOperations.update(entity);
-    }
-
-    @Override
-    public void deleteEntity(Delete entity)
-    {
-        super.iCrudOperations.delete(entity);
-    }
-
-    @Override
-    public void addCourse(Update pUpdate, us.core.pr.domain.dto.course.Create cCreate)
+    public void addCourse(Update pUpdate, Create cCreate)
     {
         try
         {
-            Professor professor = ipRepository.findByPersonnelId(pUpdate.getPersonnelId())
+            Professor professor = repository.findByPersonnelId(pUpdate.getPersonnelId())
                     .orElseThrow(ProfessorRecordNotFoundException::new);
-            IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> mapper =
+            IDataTransferObjectMapper<Create, Course> mapper =
                     factory.create(CreateToCourse.class);
             Course course = mapper.from(cCreate);
             // need to modify
@@ -83,7 +53,7 @@ public class ProfessorService
             courseTaught.setCourse(course);
             courseTaught.setProfessor(professor);
             professor.getCourseTaught().add(courseTaught);
-            super.ipRepository.saveAndFlush(professor);
+            repository.saveAndFlush(professor);
         }
         catch (MapperNotFoundException | ProfessorRecordNotFoundException e)
         {
@@ -91,13 +61,12 @@ public class ProfessorService
         }
     }
 
-    @Override
     public RpProfessorAVG getAverage(Read read)
     {
         try
         {
 
-            Professor professor = ipRepository.findByPersonnelId(read.getPersonnelId())
+            Professor professor = repository.findByPersonnelId(read.getPersonnelId())
                     .orElseThrow(ProfessorRecordNotFoundException::new);
 
             RpProfessorAVG rp = new RpProfessorAVG();
@@ -136,7 +105,7 @@ public class ProfessorService
         }
         catch (ProfessorRecordNotFoundException e)
         {
-            throw new ProfessorFetchingReportFailureException(e) ;
+            throw new ProfessorFetchingReportFailureException(e);
         }
     }
 

@@ -1,6 +1,6 @@
 package us.core.pr.utils;
 
-import us.core.pr.domain.entity.Student;
+import us.core.pr.domain.db.entities.university.Student;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

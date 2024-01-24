@@ -12,13 +12,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import us.core.pr.domain.dto.course.Create;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.utils.mapper.impl.course.CreateToCourse;
+import us.core.pr.utils.mapper.impl.university.course.CreateToCourse;
 import us.core.pr.domain.dto.reporting.RpStudentAVG;
 import us.core.pr.domain.dto.student.Read;
 import us.core.pr.domain.dto.student.Update;
-import us.core.pr.domain.entity.Course;
-import us.core.pr.domain.entity.middle.CourseTaken;
-import us.core.pr.domain.entity.Student;
+import us.core.pr.domain.db.entities.university.Course;
+import us.core.pr.domain.db.entities.university.mdt.CourseTaken;
+import us.core.pr.domain.db.entities.university.Student;
 import us.core.pr.repository.IStudentRepository;
 import us.core.pr.service.impl.StudentService;
 

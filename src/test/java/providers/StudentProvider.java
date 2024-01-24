@@ -3,7 +3,7 @@ package providers;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
-import us.core.pr.domain.entity.Student;
+import us.core.pr.domain.db.entities.university.Student;
 
 import java.util.stream.Stream;
 
