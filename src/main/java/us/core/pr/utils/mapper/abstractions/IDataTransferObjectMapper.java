@@ -2,7 +2,6 @@ package us.core.pr.utils.mapper.abstractions;
 
 import java.io.Serializable;
 import java.util.*;
-import java.util.stream.*;
 
 public interface IDataTransferObjectMapper<A, B>
         extends Serializable
@@ -11,7 +10,14 @@ public interface IDataTransferObjectMapper<A, B>
 
     default Set<B> from(Set<A> sources)
     {
-        return sources.stream().map(this::from).collect(Collectors.toSet());
+        Iterator<A> sourceIterator = sources.iterator();
+        Set<B> bSet = new HashSet<>();
+        while (sourceIterator.hasNext())
+        {
+            A a = sourceIterator.next();
+            bSet.add(this.from(a));
+        }
+        return bSet;
     }
 
 }

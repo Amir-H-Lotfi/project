@@ -1,16 +1,15 @@
-package us.core.pr.domain.dto;
-
-import us.core.pr.domain.db.entities.university.Professor;
+package us.core.pr.domain.dto.base;
 
 import java.io.Serializable;
 
 public class PersonDTO
-        extends BaseDTO
         implements Serializable
 
 {
     protected String name;
     protected String surname;
+    protected String address;
+    protected String nationalId;
 
     public String getName()
     {

@@ -1,6 +1,6 @@
 package us.core.pr.domain.dto.course;
 
-import us.core.pr.domain.dto.BaseDTO;
+import us.core.pr.domain.dto.base.BaseDTO;
 
 import java.io.Serializable;
 import java.util.*;
@@ -10,9 +10,9 @@ public class Create
         implements Serializable
 {
     private String                                                name;
-    private Integer                                               credit;
-    private Set<us.core.pr.domain.dto.middle.coursetaught.Create> courseTaught;
-    private Set<us.core.pr.domain.dto.middle.coursetaken.Create>  courseTaken;
+    private Integer                                            credit;
+    private Set<us.core.pr.domain.dto.mdt.coursetaught.Create> courseTaught;
+    private Set<us.core.pr.domain.dto.mdt.coursetaken.Create>  courseTaken;
 
 
     public Create()

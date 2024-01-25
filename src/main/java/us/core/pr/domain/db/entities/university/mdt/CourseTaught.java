@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Table(name = "course_taught")
 @Entity
 public class CourseTaught
+    implements Serializable
 {
     @Embeddable
     public static class CompositeKey

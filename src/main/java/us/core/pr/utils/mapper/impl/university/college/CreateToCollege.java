@@ -8,10 +8,9 @@ import us.core.pr.domain.dto.college.Create;
 import us.core.pr.utils.builder.GenericBeanBuilder;
 import us.core.pr.utils.mapper.abstractions.IDataTransferObjectMapper;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
-import us.core.pr.utils.mapper.impl.university.course.CreateToCourse;
-import us.core.pr.utils.mapper.impl.university.professor.CreateToProfessor;
+import us.core.pr.utils.mapper.impl.university.course.ReadToCourse;
 import us.core.pr.utils.mapper.impl.university.professor.ReadToProfessor;
-import us.core.pr.utils.mapper.impl.university.student.CreateToStudent;
+import us.core.pr.utils.mapper.impl.university.student.ReadToStudent;
 
 public class CreateToCollege
         implements IDataTransferObjectMapper<Create, College>
@@ -22,17 +21,16 @@ public class CreateToCollege
     public College from(Create source)
     {
         IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Read, Professor> rpMapper = factory.create(ReadToProfessor.class);
-        IDataTransferObjectMapper<us.core.pr.domain.dto.professor.Create, Professor> cpMapper = factory.create(CreateToProfessor.class);
-        IDataTransferObjectMapper<us.core.pr.domain.dto.student.Create, Student> csMapper = factory.create(CreateToStudent.class);
-        IDataTransferObjectMapper<us.core.pr.domain.dto.course.Create, Course> ccMapper = factory.create(CreateToCourse.class);
+        IDataTransferObjectMapper<us.core.pr.domain.dto.student.Read, Student> rsMapper = factory.create(ReadToStudent.class);
+        IDataTransferObjectMapper<us.core.pr.domain.dto.course.Read, Course> rcMapper = factory.create(ReadToCourse.class);
 
 
         return new GenericBeanBuilder<>(College.class)
                 .with("name", source.getName())
                 .with("headOfDepartment", rpMapper.from(source.getHeadOfDepartment()))
-                .with("professors", cpMapper.from(source.getProfessors()))
-                .with("students", csMapper.from(source.getStudents()))
-                .with("courses", ccMapper.from(source.getCourses()))
+                .with("professors", rpMapper.from(source.getProfessors()))
+                .with("students", rsMapper.from(source.getStudents()))
+                .with("courses", rcMapper.from(source.getCourses()))
                 .build();
     }
 

@@ -1,17 +1,19 @@
 package us.core.pr.domain.dto.student;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import us.core.pr.domain.dto.mdt.coursetaken.Read;
 
 import java.io.Serializable;
+import java.util.*;
 
 public class Create
         implements Serializable
 {
-    private String studentId;
-    private String name;
-    private String surname;
-    private String nationalId;
-    private String address;
+    private String                                             studentId;
+    private String                                             name;
+    private String                                             surname;
+    private String                                             nationalId;
+    private String                                          address;
+    private Set<us.core.pr.domain.dto.mdt.coursetaken.Read> courseTaken;
 
     public Create()
     {
@@ -65,5 +67,15 @@ public class Create
     public void setAddress(String address)
     {
         this.address = address;
+    }
+
+    public Set<Read> getCourseTaken()
+    {
+        return courseTaken;
+    }
+
+    public void setCourseTaken(Set<Read> courseTaken)
+    {
+        this.courseTaken = courseTaken;
     }
 }

@@ -25,7 +25,7 @@ public class Professor
 {
     private String personnelId;
 
-    // relation
+    // relationships
     private College           department;
     private Set<CourseTaught> courseTaught;
 

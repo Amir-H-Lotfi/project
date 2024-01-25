@@ -1,7 +1,5 @@
 package us.core.pr.domain.dto.course;
 
-import us.core.pr.domain.db.entities.base.BaseEntity;
-
 import java.util.*;
 
 public class Read
@@ -9,8 +7,8 @@ public class Read
     private String  name;
     private Integer credit;
 
-    private Set<us.core.pr.domain.dto.middle.coursetaken.Read>  courseTaken;
-    private Set<us.core.pr.domain.dto.middle.coursetaught.Read> courseTaught;
+    private Set<us.core.pr.domain.dto.mdt.coursetaken.Read>  courseTaken;
+    private Set<us.core.pr.domain.dto.mdt.coursetaught.Read> courseTaught;
 
     public Read()
     {
@@ -38,32 +36,32 @@ public class Read
         this.credit = credit;
     }
 
-    public Set<us.core.pr.domain.dto.middle.coursetaken.Read> getCourseTaken()
+    public Set<us.core.pr.domain.dto.mdt.coursetaken.Read> getCourseTaken()
     {
         return courseTaken;
     }
 
-    public void setCourseTaken(Set<us.core.pr.domain.dto.middle.coursetaken.Read> courseTaken)
+    public void setCourseTaken(Set<us.core.pr.domain.dto.mdt.coursetaken.Read> courseTaken)
     {
         this.courseTaken = courseTaken;
     }
 
-    public Set<us.core.pr.domain.dto.middle.coursetaught.Read> getCourseTaught()
+    public Set<us.core.pr.domain.dto.mdt.coursetaught.Read> getCourseTaught()
     {
         return courseTaught;
     }
 
-    public void setCourseTaught(Set<us.core.pr.domain.dto.middle.coursetaught.Read> courseTaught)
+    public void setCourseTaught(Set<us.core.pr.domain.dto.mdt.coursetaught.Read> courseTaught)
     {
         this.courseTaught = courseTaught;
     }
 
-    public void addCourseTaken(us.core.pr.domain.dto.middle.coursetaught.Read courseTaught)
+    public void addCourseTaken(us.core.pr.domain.dto.mdt.coursetaught.Read courseTaught)
     {
         this.courseTaught.add(courseTaught);
     }
 
-    public void addCourseTaught(us.core.pr.domain.dto.middle.coursetaken.Read courseTaken)
+    public void addCourseTaught(us.core.pr.domain.dto.mdt.coursetaken.Read courseTaken)
     {
         this.courseTaken.add(courseTaken);
     }

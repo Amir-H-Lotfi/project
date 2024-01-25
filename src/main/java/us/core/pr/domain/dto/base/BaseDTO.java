@@ -1,4 +1,4 @@
-package us.core.pr.domain.dto;
+package us.core.pr.domain.dto.base;
 
 import java.io.Serializable;
 

@@ -26,7 +26,7 @@ public class Student
 {
     private String studentId;
 
-    // relation
+    // relationships
     private Set<CourseTaken> courseTaken;
 
     public Student() {}
@@ -36,7 +36,6 @@ public class Student
     {
         return studentId;
     }
-
 
 
     @OneToMany(mappedBy = "course", fetch = FetchType.EAGER)
@@ -49,6 +48,7 @@ public class Student
     {
         this.studentId = studentId;
     }
+
     public void setCourseTaken(Set<CourseTaken> courses)
     {
         this.courseTaken = courses;

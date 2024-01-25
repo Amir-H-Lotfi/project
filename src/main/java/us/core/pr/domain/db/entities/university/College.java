@@ -24,6 +24,8 @@ public class College
 {
     private String name;
 
+    // relationships
+
     private Professor      headOfDepartment;
     private Set<Course>    courses;
     private Set<Student>   students;

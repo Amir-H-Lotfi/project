@@ -27,7 +27,7 @@ public class Course
     private String  name;
     private Integer credit;
 
-
+    /// relationships
     private Set<CourseTaught> courseTaught;
     private Set<CourseTaken>  courseTaken;
 

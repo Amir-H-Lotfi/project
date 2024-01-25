@@ -1,6 +1,6 @@
 package us.core.pr.domain.dto.college;
 
-import us.core.pr.domain.dto.BaseDTO;
+import us.core.pr.domain.dto.base.BaseDTO;
 
 import java.io.Serializable;
 
