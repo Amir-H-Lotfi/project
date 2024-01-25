@@ -1,5 +1,7 @@
 package us.core.pr.security.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,6 +29,7 @@ public class DefaultUserDetailsService
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
+
         Credential credential = repository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("User[username=%s] Not Found", username)));
         IDataTransferObjectMapper<Credential, UserDetails> mapper = factory.create(CredentialsToUserDetails.class);

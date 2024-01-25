@@ -3,8 +3,6 @@ package us.core.pr.configuratoin;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import us.core.pr.controller.resolver.argument.professor.ReadResolver;
-import us.core.pr.controller.resolver.argument.professor.UpdateResolver;
 import us.core.pr.utils.mapper.factory.abstractions.interfaces.IDataTransferObjectMapperFactory;
 import us.core.pr.utils.mapper.factory.impl.DefaultDataTransferObjectMapperFactory;
 
@@ -28,8 +26,8 @@ public class BeanConfiguration
     public Collection<? extends HandlerMethodArgumentResolver> resolvers()
     {
         HandlerMethodArgumentResolver[] resolvers = new HandlerMethodArgumentResolver[]{
-                new ReadResolver(),
-                new UpdateResolver(),
+                new us.core.pr.controller.resolver.argument.professor.ReadResolver(),
+                new us.core.pr.controller.resolver.argument.professor.UpdateResolver(),
 
                 new us.core.pr.controller.resolver.argument.student.ReadResolver(),
                 new us.core.pr.controller.resolver.argument.student.UpdateResolver(),

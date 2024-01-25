@@ -1,4 +1,4 @@
-package us.core.pr.security.user;
+package us.core.pr.security.userdetails;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

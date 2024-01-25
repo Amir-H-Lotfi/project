@@ -36,6 +36,12 @@ public class ProfessorController
         return ResponseEntity.ok(createdProfessor);
     }
 
+    @RequestMapping(method = RequestMethod.GET)
+    public String welcome()
+    {
+        return "Hello Spring full project";
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/{key}")
     public ResponseEntity<Object> readSingleProfessor(
             @PathVariable Integer key)

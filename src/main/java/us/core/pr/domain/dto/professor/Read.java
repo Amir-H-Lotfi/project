@@ -10,6 +10,7 @@ public class Read
 {
     private String personnelId;
     private String name;
+    private String surname;
 
     public Read()
     {
